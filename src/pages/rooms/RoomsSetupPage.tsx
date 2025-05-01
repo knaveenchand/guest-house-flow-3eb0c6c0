@@ -33,7 +33,8 @@ const roomTypes = [
     description: "Basic amenities, 2 guests max", 
     color: "blue",
     roomNumbers: ["101", "102", "103", "104", "105", "106", "107", "201", "202", "203", "204", "205", "206", "207"],
-    amenities: ["Wi-Fi", "TV", "Air conditioning", "Private bathroom"]
+    amenities: ["Wi-Fi", "TV", "Air conditioning", "Private bathroom"],
+    maxGuests: 2
   },
   { 
     name: "Deluxe Room", 
@@ -41,7 +42,8 @@ const roomTypes = [
     description: "Enhanced amenities, 3 guests max", 
     color: "indigo",
     roomNumbers: ["108", "109", "110", "111", "112", "208", "209", "210", "211", "212", "301", "302"],
-    amenities: ["Wi-Fi", "TV", "Air conditioning", "Private bathroom", "Mini fridge", "Safe", "Balcony"]
+    amenities: ["Wi-Fi", "TV", "Air conditioning", "Private bathroom", "Mini fridge", "Safe", "Balcony"],
+    maxGuests: 3
   },
   { 
     name: "Suite", 
@@ -49,7 +51,8 @@ const roomTypes = [
     description: "Luxury amenities, 4 guests max", 
     color: "purple",
     roomNumbers: ["303", "304", "305", "306", "307", "308", "309", "310"],
-    amenities: ["Wi-Fi", "TV", "Air conditioning", "Private bathroom", "Mini fridge", "Safe", "Balcony", "Separate living area", "Jacuzzi", "King size bed"]
+    amenities: ["Wi-Fi", "TV", "Air conditioning", "Private bathroom", "Mini fridge", "Safe", "Balcony", "Separate living area", "Jacuzzi", "King size bed"],
+    maxGuests: 4
   }
 ];
 
@@ -110,6 +113,8 @@ const RoomsSetupPage = () => {
   const [roomNumbers, setRoomNumbers] = useState<string[]>([]);
   const [newRoomNumber, setNewRoomNumber] = useState("");
   const [isAddRoomTypeOpen, setIsAddRoomTypeOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingRoomTypeIndex, setEditingRoomTypeIndex] = useState<number | null>(null);
   
   // Selected amenities
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>(["Wi-Fi", "TV", "Air conditioning", "Private bathroom"]);
@@ -148,6 +153,22 @@ const RoomsSetupPage = () => {
     }
   };
 
+  const handleEditRoomType = (index: number) => {
+    const roomType = roomTypeList[index];
+    setNewRoomType({
+      name: roomType.name,
+      description: roomType.description,
+      maxGuests: roomType.maxGuests || 2,
+      color: roomType.color,
+      amenities: roomType.amenities,
+    });
+    setRoomNumbers([...roomType.roomNumbers]);
+    setSelectedAmenities([...roomType.amenities]);
+    setIsEditMode(true);
+    setEditingRoomTypeIndex(index);
+    setIsAddRoomTypeOpen(true);
+  };
+
   const handleAddRoomType = () => {
     if (!newRoomType.name) {
       toast.error("Please enter a room type name");
@@ -159,27 +180,53 @@ const RoomsSetupPage = () => {
       return;
     }
     
-    const newType = {
+    const roomTypeData = {
       name: newRoomType.name,
       totalRooms: roomNumbers.length,
       description: newRoomType.description || `${selectedAmenities.slice(0, 3).join(", ")}, ${newRoomType.maxGuests} guests max`,
       color: newRoomType.color,
       roomNumbers: [...roomNumbers],
-      amenities: [...selectedAmenities]
+      amenities: [...selectedAmenities],
+      maxGuests: newRoomType.maxGuests
     };
     
-    // Add new room type to the list
-    setRoomTypeList([...roomTypeList, newType]);
+    if (isEditMode && editingRoomTypeIndex !== null) {
+      // Update existing room type
+      const updatedList = [...roomTypeList];
+      updatedList[editingRoomTypeIndex] = roomTypeData;
+      setRoomTypeList(updatedList);
+      
+      // Update rates if the room name changed
+      const oldName = roomTypeList[editingRoomTypeIndex].name;
+      if (oldName !== roomTypeData.name) {
+        const updatedRates = { ...ratesData };
+        updatedRates[roomTypeData.name] = updatedRates[oldName];
+        delete updatedRates[oldName];
+        setRatesData(updatedRates);
+      }
+      
+      toast.success(`${roomTypeData.name} updated successfully`);
+    } else {
+      // Add new room type to the list
+      setRoomTypeList([...roomTypeList, roomTypeData]);
+      
+      // Add empty rates for the new room type
+      const newRates = { ...ratesData };
+      newRates[newRoomType.name] = {};
+      bookingChannels.forEach(channel => {
+        newRates[newRoomType.name][channel] = "0";
+      });
+      setRatesData(newRates);
+      
+      toast.success(`${roomTypeData.name} added successfully with ${roomTypeData.totalRooms} rooms`);
+    }
     
-    // Add empty rates for the new room type
-    const newRates = { ...ratesData };
-    newRates[newRoomType.name] = {};
-    bookingChannels.forEach(channel => {
-      newRates[newRoomType.name][channel] = "0";
-    });
-    setRatesData(newRates);
-    
-    // Reset form
+    // Reset form and close dialog
+    resetRoomTypeForm();
+    setIsAddRoomTypeOpen(false);
+  };
+
+  const resetRoomTypeForm = () => {
     setNewRoomType({
       name: "",
       description: "",
@@ -189,11 +236,8 @@ const RoomsSetupPage = () => {
     });
     setRoomNumbers([]);
     setSelectedAmenities(["Wi-Fi", "TV", "Air conditioning", "Private bathroom"]);
-    
-    // Close dialog
-    setIsAddRoomTypeOpen(false);
-    
-    toast.success(`${newType.name} added successfully with ${newType.totalRooms} rooms`);
+    setIsEditMode(false);
+    setEditingRoomTypeIndex(null);
   };
 
   const handleAddRatePlan = () => {
@@ -216,6 +260,13 @@ const RoomsSetupPage = () => {
     toast.success("Rates have been saved successfully");
   };
 
+  const handleDialogOpenChange = (open: boolean) => {
+    if (!open) {
+      resetRoomTypeForm();
+    }
+    setIsAddRoomTypeOpen(open);
+  };
+
   return (
     <Layout>
       <div className="space-y-10 pb-10">
@@ -228,7 +279,7 @@ const RoomsSetupPage = () => {
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">Room Types</h2>
-            <Dialog open={isAddRoomTypeOpen} onOpenChange={setIsAddRoomTypeOpen}>
+            <Dialog open={isAddRoomTypeOpen} onOpenChange={handleDialogOpenChange}>
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
@@ -237,7 +288,7 @@ const RoomsSetupPage = () => {
               </DialogTrigger>
               <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>Add New Room Type</DialogTitle>
+                  <DialogTitle>{isEditMode ? "Edit Room Type" : "Add New Room Type"}</DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-4 items-center gap-4">
@@ -344,13 +395,34 @@ const RoomsSetupPage = () => {
                       </p>
                     </div>
                   </div>
+
+                  {/* Color Selection */}
+                  <div className="grid grid-cols-4 items-start gap-4">
+                    <Label className="text-right pt-2">
+                      Color
+                    </Label>
+                    <div className="col-span-3">
+                      <div className="flex flex-wrap gap-2">
+                        {["blue", "indigo", "purple", "pink", "green", "yellow", "orange", "red", "gray"].map((color) => (
+                          <div 
+                            key={color} 
+                            className={`w-8 h-8 rounded-full cursor-pointer border-2 ${newRoomType.color === color ? 'border-black' : 'border-transparent'} bg-${color}-500`}
+                            onClick={() => setNewRoomType({ ...newRoomType, color })}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <DialogFooter>
-                  <Button type="button" variant="outline" onClick={() => setIsAddRoomTypeOpen(false)}>
+                  <Button type="button" variant="outline" onClick={() => {
+                    resetRoomTypeForm();
+                    setIsAddRoomTypeOpen(false);
+                  }}>
                     Cancel
                   </Button>
                   <Button type="button" onClick={handleAddRoomType}>
-                    Save Room Type
+                    {isEditMode ? "Update" : "Save"} Room Type
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -358,7 +430,7 @@ const RoomsSetupPage = () => {
           </div>
           
           <div className="grid gap-4 md:grid-cols-3">
-            {roomTypeList.map((room) => (
+            {roomTypeList.map((room, index) => (
               <Card key={room.name}>
                 <CardContent className="pt-4">
                   <div className="flex items-center justify-between">
@@ -383,7 +455,7 @@ const RoomsSetupPage = () => {
                   </div>
                   
                   <div className="mt-3 flex justify-end space-x-2">
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => handleEditRoomType(index)}>
                       <Edit className="h-4 w-4 mr-1" /> Edit
                     </Button>
                   </div>
