@@ -1,12 +1,15 @@
 
+import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { BedDouble, Hotel, Plus, Edit, Trash2 } from "lucide-react";
+import { BedDouble, Hotel, Plus, Edit, Trash2, Save } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { toast } from "sonner";
 
 // Booking channels
 const bookingChannels = [
@@ -19,7 +22,88 @@ const bookingChannels = [
   "Aquatica"
 ];
 
+// Room types with their base rates
+const roomTypes = [
+  { name: "Standard Room", totalRooms: 14, description: "Basic amenities, 2 guests max", color: "blue" },
+  { name: "Deluxe Room", totalRooms: 12, description: "Enhanced amenities, 3 guests max", color: "indigo" },
+  { name: "Suite", totalRooms: 8, description: "Luxury amenities, 4 guests max", color: "purple" }
+];
+
+// Initial rates data
+const initialRatesData = {
+  "Standard Room": {
+    "Walk-in": "99",
+    "Booking.com": "109",
+    "Expedia": "109",
+    "WebsiteAquita": "89",
+    "Mani Tours": "94",
+    "Compass Diving": "94",
+    "Aquatica": "89"
+  },
+  "Deluxe Room": {
+    "Walk-in": "149",
+    "Booking.com": "159",
+    "Expedia": "159",
+    "WebsiteAquita": "139",
+    "Mani Tours": "145",
+    "Compass Diving": "145",
+    "Aquatica": "139"
+  },
+  "Suite": {
+    "Walk-in": "249",
+    "Booking.com": "269",
+    "Expedia": "269",
+    "WebsiteAquita": "239",
+    "Mani Tours": "245",
+    "Compass Diving": "245", 
+    "Aquatica": "239"
+  }
+};
+
 const RoomsSetupPage = () => {
+  const [ratesData, setRatesData] = useState(initialRatesData);
+  const [editingChannel, setEditingChannel] = useState<string | null>(null);
+  
+  const handleRateChange = (roomType: string, channel: string, value: string) => {
+    // Only allow numeric input with optional decimal point
+    if (!/^\d*\.?\d*$/.test(value) && value !== '') {
+      return;
+    }
+    
+    setRatesData(prev => ({
+      ...prev,
+      [roomType]: {
+        ...prev[roomType],
+        [channel]: value
+      }
+    }));
+  };
+
+  const handleAddRoomType = () => {
+    // This would open a modal to add a new room type
+    toast.success("Add Room Type functionality will be implemented here");
+  };
+
+  const handleAddRatePlan = () => {
+    // This would open a modal to add a new rate plan
+    toast.success("Add Rate Plan functionality will be implemented here");
+  };
+
+  const handleAddChannel = () => {
+    // This would open a modal to add a new channel
+    toast.success("Add Channel functionality will be implemented here");
+  };
+
+  const handleEditChannel = (channel: string) => {
+    setEditingChannel(channel);
+    toast.success(`Now editing ${channel}`);
+  };
+
+  const handleSaveRates = () => {
+    // This would save the rates to the backend
+    toast.success("Rates have been saved successfully");
+  };
+
   return (
     <Layout>
       <div className="space-y-10 pb-10">
@@ -32,66 +116,32 @@ const RoomsSetupPage = () => {
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">Room Types</h2>
-            <Button>
+            <Button onClick={handleAddRoomType}>
               <Plus className="h-4 w-4 mr-2" />
               Add Room Type
             </Button>
           </div>
           
           <div className="grid gap-4 md:grid-cols-3">
-            <Card>
-              <CardContent className="pt-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <BedDouble className="h-5 w-5 text-blue-500" />
-                    <h3 className="font-medium">Standard Room</h3>
+            {roomTypes.map((room) => (
+              <Card key={room.name}>
+                <CardContent className="pt-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <BedDouble className={`h-5 w-5 text-${room.color}-500`} />
+                      <h3 className="font-medium">{room.name}</h3>
+                    </div>
+                    <Badge className={`bg-${room.color}-500`}>{room.totalRooms} rooms</Badge>
                   </div>
-                  <Badge className="bg-blue-500">14 rooms</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">Basic amenities, 2 guests max</p>
-                <div className="mt-3 flex justify-end space-x-2">
-                  <Button variant="outline" size="sm">
-                    <Edit className="h-4 w-4 mr-1" /> Edit
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="pt-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <BedDouble className="h-5 w-5 text-indigo-500" />
-                    <h3 className="font-medium">Deluxe Room</h3>
+                  <p className="text-sm text-muted-foreground mt-2">{room.description}</p>
+                  <div className="mt-3 flex justify-end space-x-2">
+                    <Button variant="outline" size="sm">
+                      <Edit className="h-4 w-4 mr-1" /> Edit
+                    </Button>
                   </div>
-                  <Badge className="bg-indigo-500">12 rooms</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">Enhanced amenities, 3 guests max</p>
-                <div className="mt-3 flex justify-end space-x-2">
-                  <Button variant="outline" size="sm">
-                    <Edit className="h-4 w-4 mr-1" /> Edit
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="pt-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <BedDouble className="h-5 w-5 text-purple-500" />
-                    <h3 className="font-medium">Suite</h3>
-                  </div>
-                  <Badge className="bg-purple-500">8 rooms</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">Luxury amenities, 4 guests max</p>
-                <div className="mt-3 flex justify-end space-x-2">
-                  <Button variant="outline" size="sm">
-                    <Edit className="h-4 w-4 mr-1" /> Edit
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </section>
         
@@ -99,7 +149,7 @@ const RoomsSetupPage = () => {
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">Rate Plans</h2>
-            <Button>
+            <Button onClick={handleAddRatePlan}>
               <Plus className="h-4 w-4 mr-2" />
               Add Rate Plan
             </Button>
@@ -107,50 +157,44 @@ const RoomsSetupPage = () => {
           
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Room Rates by Channel</CardTitle>
-              <CardDescription>Configure pricing for different room types and booking channels</CardDescription>
+              <div className="flex justify-between items-center">
+                <div>
+                  <CardTitle className="text-lg">Room Rates by Channel</CardTitle>
+                  <CardDescription>Configure pricing for different room types and booking channels</CardDescription>
+                </div>
+                <Button onClick={handleSaveRates} className="ml-auto">
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Rates
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
+              {/* Transposed Table */}
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Room Type</TableHead>
-                    {bookingChannels.map((channel) => (
-                      <TableHead key={channel}>{channel}</TableHead>
+                    <TableHead>Channel</TableHead>
+                    {roomTypes.map((roomType) => (
+                      <TableHead key={roomType.name}>{roomType.name}</TableHead>
                     ))}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <TableRow>
-                    <TableCell className="font-medium">Standard Room</TableCell>
-                    <TableCell>$99</TableCell>
-                    <TableCell>$109</TableCell>
-                    <TableCell>$109</TableCell>
-                    <TableCell>$89</TableCell>
-                    <TableCell>$94</TableCell>
-                    <TableCell>$94</TableCell>
-                    <TableCell>$89</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">Deluxe Room</TableCell>
-                    <TableCell>$149</TableCell>
-                    <TableCell>$159</TableCell>
-                    <TableCell>$159</TableCell>
-                    <TableCell>$139</TableCell>
-                    <TableCell>$145</TableCell>
-                    <TableCell>$145</TableCell>
-                    <TableCell>$139</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">Suite</TableCell>
-                    <TableCell>$249</TableCell>
-                    <TableCell>$269</TableCell>
-                    <TableCell>$269</TableCell>
-                    <TableCell>$239</TableCell>
-                    <TableCell>$245</TableCell>
-                    <TableCell>$245</TableCell>
-                    <TableCell>$239</TableCell>
-                  </TableRow>
+                  {bookingChannels.map((channel) => (
+                    <TableRow key={channel}>
+                      <TableCell className="font-medium">{channel}</TableCell>
+                      {roomTypes.map((roomType) => (
+                        <TableCell key={`${channel}-${roomType.name}`}>
+                          <Input 
+                            type="price"
+                            value={ratesData[roomType.name][channel]}
+                            onChange={(e) => handleRateChange(roomType.name, channel, e.target.value)}
+                            className="max-w-[100px]"
+                          />
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </CardContent>
@@ -161,7 +205,7 @@ const RoomsSetupPage = () => {
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">Booking Channels</h2>
-            <Button>
+            <Button onClick={handleAddChannel}>
               <Plus className="h-4 w-4 mr-2" />
               Add Channel
             </Button>
@@ -188,7 +232,11 @@ const RoomsSetupPage = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
-                          <Button variant="ghost" size="sm">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => handleEditChannel(channel)}
+                          >
                             <Edit className="h-4 w-4" />
                           </Button>
                           <Button variant="ghost" size="sm">
