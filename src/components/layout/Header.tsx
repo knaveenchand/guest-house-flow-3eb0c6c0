@@ -20,6 +20,7 @@ import {
   MenubarMenu, 
   MenubarTrigger 
 } from "@/components/ui/menubar";
+import { cn } from "@/lib/utils";
 
 // Module definitions
 const modules = [
@@ -107,19 +108,21 @@ const Header = () => {
           <h1 className="text-xl font-bold hidden md:block whitespace-nowrap">Hotel Esplanada</h1>
         </Link>
         
-        {/* Main modules */}
+        {/* Main modules - Widened buttons */}
         <div className="flex-1 overflow-x-auto no-scrollbar">
           <div className="flex">
             {modules.map((module) => (
               <Link 
                 key={module.title}
                 to={module.path} 
-                className={`flex items-center gap-2 px-4 py-2 border-r border-gray-800 transition-colors
-                  ${currentPath === module.path || currentPath.startsWith(`${module.path}/`) 
-                    ? `${module.bgColor} ${module.borderColor} border-b-2` : ''}`}
+                className={cn(
+                  "flex items-center justify-center gap-2 px-6 py-2 border-r border-gray-800 transition-colors min-w-[100px]",
+                  currentPath === module.path || currentPath.startsWith(`${module.path}/`) 
+                    ? `${module.bgColor} ${module.borderColor} border-b-2` : ''
+                )}
               >
                 <module.icon className={`h-5 w-5 ${module.color}`} />
-                <span className={`${module.color} hidden md:block`}>{module.title}</span>
+                <span className={`${module.color} hidden md:block font-medium`}>{module.title}</span>
               </Link>
             ))}
           </div>
@@ -147,7 +150,7 @@ const Header = () => {
         </Button>
       </div>
       
-      {/* Submenu for current module */}
+      {/* Submenu for current module - enhanced style */}
       {currentMainModule && currentMainModule.subMenu && currentMainModule.subMenu.length > 0 && (
         <div className={`py-1 px-4 ${currentMainModule.bgColor} border-b border-gray-800`}>
           <div className="flex space-x-4 overflow-x-auto no-scrollbar">
@@ -155,14 +158,14 @@ const Header = () => {
               <Link 
                 key={item.title}
                 to={item.path} 
-                className={`flex items-center gap-2 px-3 py-2 rounded-md ${
+                className={`flex items-center gap-2 px-4 py-3 rounded-md ${
                   currentPath === item.path 
                     ? `bg-gray-800 ${currentMainModule.color}` 
                     : `hover:bg-gray-800/50`
                 }`}
               >
                 <item.icon className="h-5 w-5" />
-                <span className="text-sm hidden md:block">{item.title}</span>
+                <span className="text-sm font-medium">{item.title}</span>
               </Link>
             ))}
           </div>
