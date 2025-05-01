@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Calendar, List, PlaneLanding, PlaneTakeoff, BedDouble, Bed, Clock, Settings } from "lucide-react";
+import { Calendar, List, PlaneLanding, PlaneTakeoff, BedDouble, Bed, Clock, Settings, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { 
   Dialog,
