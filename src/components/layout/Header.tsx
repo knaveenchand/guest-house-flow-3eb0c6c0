@@ -102,23 +102,45 @@ const Header = () => {
           <h1 className="text-xl font-bold hidden sm:block whitespace-nowrap">Hotel Esplanada</h1>
         </Link>
         
-        {/* Main modules - Full width flex */}
+        {/* Main modules - Full width flex with integrated submenus */}
         <div className="flex-1 flex h-full">
-          {modules.map((module) => (
-            <div key={module.title} className="relative flex-1">
-              <Link 
-                to={module.path} 
-                className={cn(
-                  "flex items-center justify-center gap-2 h-full border-r border-gray-800 w-full transition-colors",
-                  currentPath === module.path || currentPath.startsWith(`${module.path}/`) 
-                    ? `${module.bgColor} ${module.borderColor} border-b-2` : ''
+          {modules.map((module) => {
+            const isActive = currentPath === module.path || currentPath.startsWith(`${module.path}/`);
+            
+            return (
+              <div key={module.title} className="relative flex-1 group">
+                <Link 
+                  to={module.path} 
+                  className={cn(
+                    "flex items-center justify-center gap-2 h-full border-r border-gray-800 w-full transition-colors",
+                    isActive ? `${module.bgColor} ${module.borderColor} border-b-2` : ''
+                  )}
+                >
+                  <module.icon className={`h-5 w-5 ${module.color}`} />
+                  <span className={`${module.color} font-medium`}>{module.title}</span>
+                </Link>
+                
+                {/* Submenu that appears on hover/active directly overlaid on the module */}
+                {module.subMenu && (
+                  <div className={`absolute left-0 right-0 bg-gray-900 border border-gray-700 shadow-lg z-10 
+                                  ${isActive ? 'flex' : 'hidden group-hover:flex'} flex-col`}>
+                    {module.subMenu.map((item) => (
+                      <Link 
+                        key={item.title}
+                        to={item.path} 
+                        className={`flex items-center gap-2 px-4 py-2 hover:bg-gray-800 ${
+                          currentPath === item.path ? `${module.color}` : 'text-gray-300'
+                        }`}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </Link>
+                    ))}
+                  </div>
                 )}
-              >
-                <module.icon className={`h-5 w-5 ${module.color}`} />
-                <span className={`${module.color} font-medium`}>{module.title}</span>
-              </Link>
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
         
         {/* User menu */}
@@ -142,37 +164,6 @@ const Header = () => {
           <Settings className="h-4 w-4" />
         </Button>
       </div>
-
-      {/* Module submenu - only shown when a module is selected */}
-      {currentMainModule && (
-        <div className="bg-black border-b border-gray-800">
-          <div className="container mx-auto flex items-center justify-between px-4 py-2">
-            <div className="flex items-center space-x-6">
-              {currentMainModule.subMenu.map((item) => (
-                <Link 
-                  key={item.title}
-                  to={item.path} 
-                  className={`flex items-center gap-2 py-2 border-b-2 ${
-                    currentPath === item.path 
-                      ? `${currentMainModule.borderColor} ${currentMainModule.color}` 
-                      : 'border-transparent hover:border-gray-600'
-                  }`}
-                >
-                  <item.icon className={`h-5 w-5 ${currentPath === item.path ? currentMainModule.color : 'text-gray-400'}`} />
-                  <span>{item.title}</span>
-                </Link>
-              ))}
-            </div>
-            
-            {currentMainModule.title === "Rooms" && (
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <Plus className="mr-2 h-4 w-4" />
-                Add Reservation
-              </Button>
-            )}
-          </div>
-        </div>
-      )}
     </header>
   );
 };
