@@ -17,6 +17,7 @@ import RoomsCalendarPage from "./pages/rooms/RoomsCalendarPage";
 import RoomsListPage from "./pages/rooms/RoomsListPage";
 import RoomsInvoicingPage from "./pages/rooms/RoomsInvoicingPage";
 import RoomsSetupPage from "./pages/rooms/RoomsSetupPage";
+import AddBookingPage from "./pages/rooms/AddBookingPage";
 
 import POSTablesPage from "./pages/pos/POSTablesPage";
 import POSMenuPage from "./pages/pos/POSMenuPage";
@@ -50,6 +51,7 @@ const App = () => (
           <Route path="/rooms/list" element={<RoomsListPage />} />
           <Route path="/rooms/invoicing" element={<RoomsInvoicingPage />} />
           <Route path="/rooms/setup" element={<RoomsSetupPage />} />
+          <Route path="/rooms/add" element={<AddBookingPage />} />
           
           {/* POS module */}
           <Route path="/pos" element={<POSPage />} />

@@ -3,7 +3,8 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   Hotel, Bed, Computer, ClipboardList, DollarSign, Tv, 
-  Settings, Calendar, List, FileText, Cog, MessageCircle, Car, Wrench
+  Settings, Calendar, List, FileText, Cog, MessageCircle, Car, Wrench,
+  PlaneLanding, PlaneTakeoff, Pillow, Clock, Plus
 } from 'lucide-react';
 import { 
   DropdownMenu, 
@@ -13,13 +14,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { 
-  Menubar, 
-  MenubarContent, 
-  MenubarItem, 
-  MenubarMenu, 
-  MenubarTrigger 
-} from "@/components/ui/menubar";
 import { cn } from "@/lib/utils";
 
 // Module definitions
@@ -34,7 +28,7 @@ const modules = [
     subMenu: [
       { title: "Calendar", icon: Calendar, path: "/rooms/calendar" },
       { title: "List View", icon: List, path: "/rooms/list" },
-      { title: "Invoicing", icon: FileText, path: "/rooms/invoicing" },
+      { title: "Add Booking", icon: Plus, path: "/rooms/add" },
       { title: "Setup", icon: Cog, path: "/rooms/setup" }
     ]
   },
@@ -103,25 +97,25 @@ const Header = () => {
       {/* Main navigation */}
       <div className="h-16 flex items-center px-0">
         {/* Logo - reduced width */}
-        <Link to="/" className="flex items-center gap-2 px-3 py-2 border-r border-gray-800">
+        <Link to="/" className="flex items-center gap-2 px-4 py-2 border-r border-gray-800 h-full">
           <Hotel className="h-6 w-6 text-yellow-400" />
-          <h1 className="text-xl font-bold hidden sm:block whitespace-nowrap">Hotel</h1>
+          <h1 className="text-xl font-bold hidden sm:block whitespace-nowrap">Hotel Esplanada</h1>
         </Link>
         
-        {/* Main modules - Full width grid */}
-        <div className="flex-1 grid grid-cols-5 h-full">
+        {/* Main modules - Full width flex */}
+        <div className="flex-1 flex h-full">
           {modules.map((module) => (
             <Link 
               key={module.title}
               to={module.path} 
               className={cn(
-                "flex items-center justify-center gap-2 h-full border-r border-gray-800 transition-colors",
+                "flex items-center justify-center gap-2 h-full border-r border-gray-800 flex-1 transition-colors",
                 currentPath === module.path || currentPath.startsWith(`${module.path}/`) 
                   ? `${module.bgColor} ${module.borderColor} border-b-2` : ''
               )}
             >
               <module.icon className={`h-5 w-5 ${module.color}`} />
-              <span className={`${module.color} hidden md:block font-medium`}>{module.title}</span>
+              <span className={`${module.color} font-medium`}>{module.title}</span>
             </Link>
           ))}
         </div>
@@ -148,22 +142,32 @@ const Header = () => {
         </Button>
       </div>
       
-      {/* Submenu for current module - using the provided image */}
+      {/* Submenu for current module using the actual background image */}
       {currentMainModule && currentMainModule.subMenu && currentMainModule.subMenu.length > 0 && (
-        <div className={`py-2 px-2 ${currentMainModule.bgColor} border-b border-gray-800 flex items-center`} style={{backgroundImage: "url('/lovable-uploads/8f4ee2f3-5a2e-481b-9b88-f2a78c7f8009.png')", backgroundSize: "cover", backgroundPosition: "center"}}>
-          <div className="flex space-x-6 overflow-x-auto no-scrollbar">
+        <div 
+          className={`py-2 px-4 border-b border-gray-800 flex flex-col`} 
+          style={{backgroundImage: "url('/lovable-uploads/f7381cb7-1a8e-417c-b9fa-add95fb36d5c.png')", backgroundSize: "cover", backgroundPosition: "center"}}
+        >
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-xl font-bold text-white">Room Management</h2>
+            <Button className="bg-blue-600">
+              <Plus className="mr-2 h-4 w-4" />
+              Add Reservation
+            </Button>
+          </div>
+          <div className="flex space-x-2">
             {currentMainModule.subMenu.map((item) => (
               <Link 
                 key={item.title}
                 to={item.path} 
-                className={`flex flex-col items-center justify-center gap-1 p-2 rounded-md ${
+                className={`flex items-center justify-center gap-1 px-4 py-2 rounded-md ${
                   currentPath === item.path 
-                    ? `bg-gray-800/50 ${currentMainModule.color}` 
-                    : `hover:bg-gray-800/30`
+                    ? `bg-gray-800/70 ${currentMainModule.color}` 
+                    : `hover:bg-gray-800/30 text-white`
                 }`}
               >
-                <item.icon className={`h-7 w-7 ${currentPath === item.path ? currentMainModule.color : 'text-white'}`} />
-                <span className={`text-xs font-medium ${currentPath === item.path ? currentMainModule.color : 'text-white'}`}>{item.title}</span>
+                <item.icon className={`h-4 w-4 ${currentPath === item.path ? currentMainModule.color : 'text-white'}`} />
+                <span className={`font-medium ${currentPath === item.path ? currentMainModule.color : 'text-white'}`}>{item.title}</span>
               </Link>
             ))}
           </div>
