@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BedDouble, Hotel, MapPin, Users } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { BedDouble, Hotel, MapPin, Users, Plus } from "lucide-react";
 
 const RoomsSetupPage = () => {
   return (

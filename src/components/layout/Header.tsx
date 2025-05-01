@@ -101,37 +101,35 @@ const Header = () => {
   return (
     <header className="flex flex-col w-full bg-black text-white border-b border-gray-800">
       {/* Main navigation */}
-      <div className="h-16 flex items-center px-4 gap-2">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 px-4 py-2 border-r border-gray-800">
+      <div className="h-16 flex items-center px-0">
+        {/* Logo - reduced width */}
+        <Link to="/" className="flex items-center gap-2 px-3 py-2 border-r border-gray-800">
           <Hotel className="h-6 w-6 text-yellow-400" />
-          <h1 className="text-xl font-bold hidden md:block whitespace-nowrap">Hotel Esplanada</h1>
+          <h1 className="text-xl font-bold hidden sm:block whitespace-nowrap">Hotel</h1>
         </Link>
         
-        {/* Main modules - Widened buttons */}
-        <div className="flex-1 overflow-x-auto no-scrollbar">
-          <div className="flex">
-            {modules.map((module) => (
-              <Link 
-                key={module.title}
-                to={module.path} 
-                className={cn(
-                  "flex items-center justify-center gap-2 px-6 py-2 border-r border-gray-800 transition-colors min-w-[100px]",
-                  currentPath === module.path || currentPath.startsWith(`${module.path}/`) 
-                    ? `${module.bgColor} ${module.borderColor} border-b-2` : ''
-                )}
-              >
-                <module.icon className={`h-5 w-5 ${module.color}`} />
-                <span className={`${module.color} hidden md:block font-medium`}>{module.title}</span>
-              </Link>
-            ))}
-          </div>
+        {/* Main modules - Full width grid */}
+        <div className="flex-1 grid grid-cols-5 h-full">
+          {modules.map((module) => (
+            <Link 
+              key={module.title}
+              to={module.path} 
+              className={cn(
+                "flex items-center justify-center gap-2 h-full border-r border-gray-800 transition-colors",
+                currentPath === module.path || currentPath.startsWith(`${module.path}/`) 
+                  ? `${module.bgColor} ${module.borderColor} border-b-2` : ''
+              )}
+            >
+              <module.icon className={`h-5 w-5 ${module.color}`} />
+              <span className={`${module.color} hidden md:block font-medium`}>{module.title}</span>
+            </Link>
+          ))}
         </div>
         
         {/* User menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-10 w-10 rounded-full border border-yellow-500">
+            <Button variant="ghost" className="h-10 w-10 rounded-full border border-yellow-500 mx-2">
               <Avatar className="h-9 w-9">
                 <AvatarImage src="" />
                 <AvatarFallback className="bg-gray-800 text-yellow-500">CF</AvatarFallback>
@@ -145,27 +143,27 @@ const Header = () => {
           </DropdownMenuContent>
         </DropdownMenu>
         
-        <Button variant="outline" size="icon" className="border-gray-700 bg-gray-800">
+        <Button variant="outline" size="icon" className="border-gray-700 bg-gray-800 mr-2">
           <Settings className="h-4 w-4" />
         </Button>
       </div>
       
-      {/* Submenu for current module - enhanced style */}
+      {/* Submenu for current module - using the provided image */}
       {currentMainModule && currentMainModule.subMenu && currentMainModule.subMenu.length > 0 && (
-        <div className={`py-1 px-4 ${currentMainModule.bgColor} border-b border-gray-800`}>
-          <div className="flex space-x-4 overflow-x-auto no-scrollbar">
+        <div className={`py-2 px-2 ${currentMainModule.bgColor} border-b border-gray-800 flex items-center`} style={{backgroundImage: "url('/lovable-uploads/8f4ee2f3-5a2e-481b-9b88-f2a78c7f8009.png')", backgroundSize: "cover", backgroundPosition: "center"}}>
+          <div className="flex space-x-6 overflow-x-auto no-scrollbar">
             {currentMainModule.subMenu.map((item) => (
               <Link 
                 key={item.title}
                 to={item.path} 
-                className={`flex items-center gap-2 px-4 py-3 rounded-md ${
+                className={`flex flex-col items-center justify-center gap-1 p-2 rounded-md ${
                   currentPath === item.path 
-                    ? `bg-gray-800 ${currentMainModule.color}` 
-                    : `hover:bg-gray-800/50`
+                    ? `bg-gray-800/50 ${currentMainModule.color}` 
+                    : `hover:bg-gray-800/30`
                 }`}
               >
-                <item.icon className="h-5 w-5" />
-                <span className="text-sm font-medium">{item.title}</span>
+                <item.icon className={`h-7 w-7 ${currentPath === item.path ? currentMainModule.color : 'text-white'}`} />
+                <span className={`text-xs font-medium ${currentPath === item.path ? currentMainModule.color : 'text-white'}`}>{item.title}</span>
               </Link>
             ))}
           </div>
