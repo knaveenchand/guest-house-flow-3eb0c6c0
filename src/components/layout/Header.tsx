@@ -27,8 +27,8 @@ const modules = [
     borderColor: "border-yellow-400",
     subMenu: [
       { title: "Calendar", icon: Calendar, path: "/rooms/calendar" },
-      { title: "List View", icon: List, path: "/rooms/list" },
-      { title: "Add Booking", icon: Plus, path: "/rooms/add" },
+      { title: "List", icon: List, path: "/rooms/list" },
+      { title: "Add", icon: Plus, path: "/rooms/add" },
       { title: "Setup", icon: Cog, path: "/rooms/setup" }
     ]
   },
@@ -92,18 +92,6 @@ const Header = () => {
     currentPath === module.path || currentPath.startsWith(`${module.path}/`)
   );
 
-  // Get module title for submenu header
-  const getModuleTitle = () => {
-    switch(currentMainModule?.title) {
-      case "Rooms": return "Room Management";
-      case "POS": return "Point of Sale";
-      case "Tasks": return "Task Management";
-      case "Finances": return "Financial Management";
-      case "Guest TV": return "Guest TV System";
-      default: return "Module";
-    }
-  };
-
   return (
     <header className="flex flex-col w-full bg-black text-white">
       {/* Main navigation */}
@@ -129,40 +117,6 @@ const Header = () => {
                 <module.icon className={`h-5 w-5 ${module.color}`} />
                 <span className={`${module.color} font-medium`}>{module.title}</span>
               </Link>
-              
-              {/* Submenu appears directly below the active module */}
-              {currentMainModule && currentMainModule.title === module.title && (
-                <div 
-                  className="absolute top-full left-0 right-0 py-2 px-4 border-b border-gray-800 z-10 w-full"
-                  style={{backgroundImage: "url('/lovable-uploads/97c17675-16c0-40af-a489-4ff7fd88d016.png')", backgroundSize: "cover", backgroundPosition: "center"}}
-                >
-                  <div className="flex justify-between items-center mb-2">
-                    <h2 className="text-xl font-bold text-white">{getModuleTitle()}</h2>
-                    {module.title === "Rooms" && (
-                      <Button className="bg-blue-600">
-                        <Plus className="mr-2 h-4 w-4" />
-                        Add Reservation
-                      </Button>
-                    )}
-                  </div>
-                  <div className="flex space-x-2">
-                    {module.subMenu.map((item) => (
-                      <Link 
-                        key={item.title}
-                        to={item.path} 
-                        className={`flex items-center justify-center gap-1 px-4 py-2 rounded-md ${
-                          currentPath === item.path 
-                            ? `bg-gray-800/70 ${module.color}` 
-                            : `hover:bg-gray-800/30 text-white`
-                        }`}
-                      >
-                        <item.icon className={`h-4 w-4 ${currentPath === item.path ? module.color : 'text-white'}`} />
-                        <span className={`font-medium ${currentPath === item.path ? module.color : 'text-white'}`}>{item.title}</span>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           ))}
         </div>
@@ -188,6 +142,37 @@ const Header = () => {
           <Settings className="h-4 w-4" />
         </Button>
       </div>
+
+      {/* Module submenu - only shown when a module is selected */}
+      {currentMainModule && (
+        <div className="bg-black border-b border-gray-800">
+          <div className="container mx-auto flex items-center justify-between px-4 py-2">
+            <div className="flex items-center space-x-6">
+              {currentMainModule.subMenu.map((item) => (
+                <Link 
+                  key={item.title}
+                  to={item.path} 
+                  className={`flex items-center gap-2 py-2 border-b-2 ${
+                    currentPath === item.path 
+                      ? `${currentMainModule.borderColor} ${currentMainModule.color}` 
+                      : 'border-transparent hover:border-gray-600'
+                  }`}
+                >
+                  <item.icon className={`h-5 w-5 ${currentPath === item.path ? currentMainModule.color : 'text-gray-400'}`} />
+                  <span>{item.title}</span>
+                </Link>
+              ))}
+            </div>
+            
+            {currentMainModule.title === "Rooms" && (
+              <Button className="bg-blue-600 hover:bg-blue-700">
+                <Plus className="mr-2 h-4 w-4" />
+                Add Reservation
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 };
