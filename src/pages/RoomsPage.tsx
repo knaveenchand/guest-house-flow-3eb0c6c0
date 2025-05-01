@@ -3,7 +3,8 @@ import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BedDouble, Plus, Wifi, DoorOpen } from "lucide-react";
+import { BedDouble, Plus, Wifi, DoorOpen, Settings } from "lucide-react";
+import { Link } from "react-router-dom";
 
 type RoomStatus = "available" | "occupied" | "reserved" | "maintenance";
 
@@ -17,6 +18,7 @@ type Room = {
   features: string[];
 };
 
+// Extended sample data to show more rooms (similar to having 34 rooms)
 const rooms: Room[] = [
   {
     id: "1",
@@ -90,6 +92,42 @@ const rooms: Room[] = [
     status: "occupied",
     features: ["Wi-Fi", "TV", "Bathroom", "Mini Bar"],
   },
+  {
+    id: "9",
+    number: "303",
+    type: "Standard",
+    capacity: 2,
+    pricePerNight: 99,
+    status: "available",
+    features: ["Wi-Fi", "TV", "Bathroom"],
+  },
+  {
+    id: "10",
+    number: "304",
+    type: "Deluxe",
+    capacity: 3,
+    pricePerNight: 149,
+    status: "reserved",
+    features: ["Wi-Fi", "TV", "Bathroom", "Mini Bar"],
+  },
+  {
+    id: "11",
+    number: "401",
+    type: "Suite",
+    capacity: 4,
+    pricePerNight: 249,
+    status: "available",
+    features: ["Wi-Fi", "TV", "Bathroom", "Mini Bar", "Living Room"],
+  },
+  {
+    id: "12",
+    number: "402",
+    type: "Deluxe",
+    capacity: 3,
+    pricePerNight: 149,
+    status: "maintenance",
+    features: ["Wi-Fi", "TV", "Bathroom", "Mini Bar"],
+  },
 ];
 
 const getStatusBadge = (status: RoomStatus) => {
@@ -114,14 +152,25 @@ const RoomsPage = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Rooms</h1>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground flex items-center gap-2">
               Manage all rooms and their current status
+              <span className="text-sm bg-yellow-950/40 text-yellow-400 px-2 py-1 rounded">
+                Showing {rooms.length} of 34 rooms
+              </span>
             </p>
           </div>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Room
-          </Button>
+          <div className="flex gap-2">
+            <Link to="/rooms/setup">
+              <Button variant="outline">
+                <Settings className="mr-2 h-4 w-4" />
+                Room Settings
+              </Button>
+            </Link>
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Room
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
