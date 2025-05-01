@@ -16,14 +16,14 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white">
       <div className="text-center">
         <div className="flex justify-center mb-4">
           <Hotel className="h-12 w-12 text-primary" />
         </div>
         <h1 className="text-6xl font-bold mb-4">404</h1>
         <p className="text-xl text-muted-foreground mb-6">
-          Oops! It looks like the room you're looking for doesn't exist.
+          Oops! This page doesn't exist in Hotel Esplanada.
         </p>
         <Button asChild>
           <Link to="/">Return to Dashboard</Link>

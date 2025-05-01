@@ -10,7 +10,7 @@ type LayoutProps = {
 const Layout = ({ children }: LayoutProps) => {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full">
+      <div className="flex min-h-screen w-full bg-black text-white">
         <Sidebar />
         <div className="flex-1 flex flex-col">
           <Header />
