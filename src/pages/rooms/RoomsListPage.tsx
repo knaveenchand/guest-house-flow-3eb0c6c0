@@ -1,5 +1,4 @@
-
-import { Calendar, List, PlaneLanding, PlaneTakeoff } from "lucide-react";
+import { Calendar, List, PlaneLanding, PlaneTakeoff, Plus, Settings } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -88,24 +87,20 @@ const RoomsListPage = () => {
   return (
     <Layout>
       <div className="bg-black text-white min-h-screen">
-        <div className="flex items-center justify-between mb-6 pt-4">
-          <div>
-            <h1 className="text-2xl font-bold">All Reservations</h1>
-          </div>
-          <div className="flex space-x-2">
-            <Link to="/rooms/calendar">
-              <Button variant="outline" className="border-gray-700 bg-gray-800">
-                <Calendar className="h-4 w-4 mr-2" />
-                Calendar View
-              </Button>
-            </Link>
-            <Link to="/rooms/list">
-              <Button className="bg-gray-700">
-                <List className="h-4 w-4 mr-2" />
-                List View
-              </Button>
-            </Link>
-          </div>
+        {/* Room Module Navigation */}
+        <div className="flex bg-gray-900 p-2 mb-6 space-x-4">
+          <Link to="/rooms/calendar" className="flex items-center justify-center bg-gray-800 p-2 rounded">
+            <Calendar className="h-6 w-6 text-gray-400" />
+          </Link>
+          <Link to="/rooms/list" className="flex items-center justify-center bg-yellow-700 p-2 rounded">
+            <List className="h-6 w-6 text-yellow-400" />
+          </Link>
+          <Link to="/rooms/add" className="flex items-center justify-center bg-gray-800 p-2 rounded">
+            <Plus className="h-6 w-6 text-gray-400" />
+          </Link>
+          <Link to="/rooms/setup" className="flex items-center justify-center bg-gray-800 ml-auto p-2 rounded">
+            <Settings className="h-6 w-6 text-gray-400" />
+          </Link>
         </div>
 
         <div className="bg-gray-900 rounded-sm overflow-hidden">
@@ -131,9 +126,6 @@ const RoomsListPage = () => {
                     )}
                     {reservation.notes?.airportDropoff && (
                       <PlaneTakeoff className="h-4 w-4 text-blue-400" />
-                    )}
-                    {reservation.notes?.lateCheckout && (
-                      <Calendar className="h-4 w-4 text-yellow-400" />
                     )}
                   </TableCell>
                   <TableCell>{reservation.room}</TableCell>

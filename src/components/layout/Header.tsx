@@ -102,43 +102,23 @@ const Header = () => {
           <h1 className="text-xl font-bold hidden sm:block whitespace-nowrap">Hotel Esplanada</h1>
         </Link>
         
-        {/* Main modules - Full width flex with integrated submenus */}
+        {/* Main modules - Full width flex */}
         <div className="flex-1 flex h-full">
           {modules.map((module) => {
             const isActive = currentPath === module.path || currentPath.startsWith(`${module.path}/`);
             
             return (
-              <div key={module.title} className="relative flex-1 group">
-                <Link 
-                  to={module.path} 
-                  className={cn(
-                    "flex items-center justify-center gap-2 h-full border-r border-gray-800 w-full transition-colors",
-                    isActive ? `${module.bgColor} ${module.borderColor} border-b-2` : ''
-                  )}
-                >
-                  <module.icon className={`h-5 w-5 ${module.color}`} />
-                  <span className={`${module.color} font-medium`}>{module.title}</span>
-                </Link>
-                
-                {/* Submenu that appears on hover/active directly overlaid on the module */}
-                {module.subMenu && (
-                  <div className={`absolute left-0 right-0 bg-gray-900 border border-gray-700 shadow-lg z-10 
-                                  ${isActive ? 'flex' : 'hidden group-hover:flex'} flex-col`}>
-                    {module.subMenu.map((item) => (
-                      <Link 
-                        key={item.title}
-                        to={item.path} 
-                        className={`flex items-center gap-2 px-4 py-2 hover:bg-gray-800 ${
-                          currentPath === item.path ? `${module.color}` : 'text-gray-300'
-                        }`}
-                      >
-                        <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
-                      </Link>
-                    ))}
-                  </div>
+              <Link 
+                key={module.title}
+                to={module.path} 
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-2 h-full border-r border-gray-800 transition-colors",
+                  isActive ? `${module.bgColor} ${module.borderColor} border-b-2` : ''
                 )}
-              </div>
+              >
+                <module.icon className={`h-5 w-5 ${module.color}`} />
+                <span className={`${module.color} font-medium`}>{module.title}</span>
+              </Link>
             );
           })}
         </div>
