@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Calendar, List, PlaneLanding, PlaneTakeoff, Pillow, Bed, Clock } from "lucide-react";
+import { Calendar, List, PlaneLanding, PlaneTakeoff, BedDouble, Bed, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { 
   Dialog,
@@ -257,7 +257,7 @@ const BookingDetails = ({ booking }: { booking: Booking }) => {
             )}
             {booking.notes.extraPillows && (
               <div className="flex items-center bg-yellow-900/50 text-yellow-400 px-2 py-1 rounded text-xs">
-                <Pillow className="h-3 w-3 mr-1" /> Extra pillows
+                <BedDouble className="h-3 w-3 mr-1" /> Extra pillows
               </div>
             )}
             {booking.notes.lateCheckout && (
@@ -339,7 +339,7 @@ const RoomsCalendarPage = () => {
                               {booking.notes.airportPickup && <PlaneLanding className="h-3 w-3 text-white absolute top-1 left-1" />}
                               {booking.notes.airportDropoff && <PlaneTakeoff className="h-3 w-3 text-white absolute top-1 left-1" />}
                               {booking.notes.extraBed && <Bed className="h-3 w-3 text-white absolute top-1 right-1" />}
-                              {booking.notes.extraPillows && <Pillow className="h-3 w-3 text-white absolute bottom-1 left-1" />}
+                              {booking.notes.extraPillows && <BedDouble className="h-3 w-3 text-white absolute bottom-1 left-1" />}
                               {booking.notes.lateCheckout && <Clock className="h-3 w-3 text-white absolute bottom-1 right-1" />}
                             </div>
                           )}

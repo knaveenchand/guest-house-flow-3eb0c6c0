@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { 
   Hotel, Bed, Computer, ClipboardList, DollarSign, Tv, 
   Settings, Calendar, List, FileText, Cog, MessageCircle, Car, Wrench,
-  PlaneLanding, PlaneTakeoff, Pillow, Clock, Plus
+  PlaneLanding, PlaneTakeoff, BedDouble, Clock, Plus
 } from 'lucide-react';
 import { 
   DropdownMenu, 

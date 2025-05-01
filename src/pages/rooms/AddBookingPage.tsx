@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { Calendar } from "@/components/ui/calendar";
@@ -31,7 +30,7 @@ import {
   PopoverTrigger 
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { CalendarIcon, PlaneLanding, PlaneTakeoff, Pillow, Bed, Clock } from "lucide-react";
+import { CalendarIcon, PlaneLanding, PlaneTakeoff, BedDouble, Bed, Clock } from "lucide-react";
 
 // Define the form schema
 const formSchema = z.object({
@@ -391,7 +390,7 @@ const AddBookingPage = () => {
                         </FormControl>
                         <div className="space-y-1 leading-none">
                           <FormLabel className="flex items-center gap-2">
-                            <Pillow className="h-4 w-4" />
+                            <BedDouble className="h-4 w-4" />
                             Extra Pillows
                           </FormLabel>
                         </div>
