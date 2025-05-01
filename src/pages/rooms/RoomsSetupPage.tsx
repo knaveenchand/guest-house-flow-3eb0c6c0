@@ -4,200 +4,288 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { BedDouble, Hotel, MapPin, Users, Plus } from "lucide-react";
+import { BedDouble, Hotel, Plus, Edit, Trash2 } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
+// Booking channels
+const bookingChannels = [
+  "Walk-in",
+  "Booking.com",
+  "Expedia",
+  "WebsiteAquita",
+  "Mani Tours",
+  "Compass Diving",
+  "Aquatica"
+];
 
 const RoomsSetupPage = () => {
   return (
     <Layout>
-      <div className="space-y-6">
+      <div className="space-y-10 pb-10">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Rooms Setup</h1>
           <p className="text-muted-foreground">Configure room types, rates, and property settings.</p>
         </div>
         
-        <Tabs defaultValue="property">
-          <TabsList className="grid w-full grid-cols-4 mb-4">
-            <TabsTrigger value="property">Property</TabsTrigger>
-            <TabsTrigger value="rooms">Room Types</TabsTrigger>
-            <TabsTrigger value="rates">Rate Plans</TabsTrigger>
-            <TabsTrigger value="policies">Policies</TabsTrigger>
-          </TabsList>
+        {/* Room Types Section */}
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Room Types</h2>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Room Type
+            </Button>
+          </div>
           
-          <TabsContent value="property" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-3">
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Property Information</CardTitle>
-                <CardDescription>
-                  Update your hotel information and contact details
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="propertyName">Property Name</Label>
-                    <Input id="propertyName" defaultValue="Hotel Esplanada" />
+              <CardContent className="pt-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <BedDouble className="h-5 w-5 text-blue-500" />
+                    <h3 className="font-medium">Standard Room</h3>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="propertyType">Property Type</Label>
-                    <Input id="propertyType" defaultValue="Boutique Hotel" />
-                  </div>
+                  <Badge className="bg-blue-500">14 rooms</Badge>
                 </div>
-                
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="address">Address</Label>
-                    <Input id="address" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="city">City</Label>
-                    <Input id="city" />
-                  </div>
-                </div>
-                
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
-                    <Input id="phone" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" />
-                  </div>
+                <p className="text-sm text-muted-foreground mt-2">Basic amenities, 2 guests max</p>
+                <div className="mt-3 flex justify-end space-x-2">
+                  <Button variant="outline" size="sm">
+                    <Edit className="h-4 w-4 mr-1" /> Edit
+                  </Button>
                 </div>
               </CardContent>
             </Card>
             
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Room Configuration</CardTitle>
-                <CardDescription>
-                  Set the number of rooms and other room-related settings
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="totalRooms">Total Rooms</Label>
-                    <Input id="totalRooms" type="number" defaultValue="34" />
+              <CardContent className="pt-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <BedDouble className="h-5 w-5 text-indigo-500" />
+                    <h3 className="font-medium">Deluxe Room</h3>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="floors">Number of Floors</Label>
-                    <Input id="floors" type="number" defaultValue="4" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="checkout">Default Checkout Time</Label>
-                    <Input id="checkout" type="time" defaultValue="11:00" />
-                  </div>
+                  <Badge className="bg-indigo-500">12 rooms</Badge>
                 </div>
-                
-                <div className="flex justify-end">
-                  <Button>Save Configuration</Button>
+                <p className="text-sm text-muted-foreground mt-2">Enhanced amenities, 3 guests max</p>
+                <div className="mt-3 flex justify-end space-x-2">
+                  <Button variant="outline" size="sm">
+                    <Edit className="h-4 w-4 mr-1" /> Edit
+                  </Button>
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-          
-          <TabsContent value="rooms" className="space-y-4">
+            
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Room Types</CardTitle>
-                <CardDescription>
-                  Manage the types of rooms available at your property
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="grid gap-4 md:grid-cols-3">
-                    <Card>
-                      <CardContent className="pt-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <BedDouble className="h-5 w-5 text-blue-500" />
-                            <h3 className="font-medium">Standard Room</h3>
-                          </div>
-                          <Badge className="bg-blue-500">14 rooms</Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-2">Basic amenities, 2 guests max</p>
-                        <div className="mt-3 flex justify-end">
-                          <Button variant="outline" size="sm">Edit</Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card>
-                      <CardContent className="pt-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <BedDouble className="h-5 w-5 text-indigo-500" />
-                            <h3 className="font-medium">Deluxe Room</h3>
-                          </div>
-                          <Badge className="bg-indigo-500">12 rooms</Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-2">Enhanced amenities, 3 guests max</p>
-                        <div className="mt-3 flex justify-end">
-                          <Button variant="outline" size="sm">Edit</Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card>
-                      <CardContent className="pt-4">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <BedDouble className="h-5 w-5 text-purple-500" />
-                            <h3 className="font-medium">Suite</h3>
-                          </div>
-                          <Badge className="bg-purple-500">8 rooms</Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-2">Luxury amenities, 4 guests max</p>
-                        <div className="mt-3 flex justify-end">
-                          <Button variant="outline" size="sm">Edit</Button>
-                        </div>
-                      </CardContent>
-                    </Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <BedDouble className="h-5 w-5 text-purple-500" />
+                    <h3 className="font-medium">Suite</h3>
                   </div>
-                  
-                  <div className="flex justify-end">
-                    <Button>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Room Type
-                    </Button>
-                  </div>
+                  <Badge className="bg-purple-500">8 rooms</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground mt-2">Luxury amenities, 4 guests max</p>
+                <div className="mt-3 flex justify-end space-x-2">
+                  <Button variant="outline" size="sm">
+                    <Edit className="h-4 w-4 mr-1" /> Edit
+                  </Button>
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          </div>
+        </section>
+        
+        {/* Rate Plans Section */}
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Rate Plans</h2>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Rate Plan
+            </Button>
+          </div>
           
-          <TabsContent value="rates">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Room Rates by Channel</CardTitle>
+              <CardDescription>Configure pricing for different room types and booking channels</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Room Type</TableHead>
+                    {bookingChannels.map((channel) => (
+                      <TableHead key={channel}>{channel}</TableHead>
+                    ))}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-medium">Standard Room</TableCell>
+                    <TableCell>$99</TableCell>
+                    <TableCell>$109</TableCell>
+                    <TableCell>$109</TableCell>
+                    <TableCell>$89</TableCell>
+                    <TableCell>$94</TableCell>
+                    <TableCell>$94</TableCell>
+                    <TableCell>$89</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">Deluxe Room</TableCell>
+                    <TableCell>$149</TableCell>
+                    <TableCell>$159</TableCell>
+                    <TableCell>$159</TableCell>
+                    <TableCell>$139</TableCell>
+                    <TableCell>$145</TableCell>
+                    <TableCell>$145</TableCell>
+                    <TableCell>$139</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">Suite</TableCell>
+                    <TableCell>$249</TableCell>
+                    <TableCell>$269</TableCell>
+                    <TableCell>$269</TableCell>
+                    <TableCell>$239</TableCell>
+                    <TableCell>$245</TableCell>
+                    <TableCell>$245</TableCell>
+                    <TableCell>$239</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </section>
+        
+        {/* Booking Channels Section */}
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Booking Channels</h2>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Channel
+            </Button>
+          </div>
+          
+          <Card>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Channel Name</TableHead>
+                    <TableHead>Commission</TableHead>
+                    <TableHead>Payment Type</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {bookingChannels.map((channel, index) => (
+                    <TableRow key={channel}>
+                      <TableCell className="font-medium">{channel}</TableCell>
+                      <TableCell>{index === 0 ? '0%' : `${(index + 1) * 2}%`}</TableCell>
+                      <TableCell>
+                        {index === 0 ? 'Direct' : index % 2 === 0 ? 'Prepaid' : 'On Arrival'}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex space-x-2">
+                          <Button variant="ghost" size="sm">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="sm">
+                            <Trash2 className="h-4 w-4 text-red-500" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </section>
+        
+        {/* Policies Section */}
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Policies</h2>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Policy
+            </Button>
+          </div>
+          
+          <div className="grid gap-4 md:grid-cols-2">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Rate Plans</CardTitle>
-                <CardDescription>
-                  Configure pricing and rate plans for different room types and seasons
-                </CardDescription>
+                <CardTitle className="text-lg">Cancellation Policies</CardTitle>
+                <CardDescription>Define cancellation rules by channel</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">Rate plan configuration will be added here.</p>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Channel</TableHead>
+                      <TableHead>Free Cancel</TableHead>
+                      <TableHead>Fee</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Walk-in</TableCell>
+                      <TableCell>24 hours</TableCell>
+                      <TableCell>1 night</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Booking.com</TableCell>
+                      <TableCell>48 hours</TableCell>
+                      <TableCell>100%</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Expedia</TableCell>
+                      <TableCell>48 hours</TableCell>
+                      <TableCell>100%</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
               </CardContent>
             </Card>
-          </TabsContent>
-          
-          <TabsContent value="policies">
+            
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Hotel Policies</CardTitle>
-                <CardDescription>
-                  Configure policies for bookings, cancellations, and other rules
-                </CardDescription>
+                <CardTitle className="text-lg">Payment Policies</CardTitle>
+                <CardDescription>Define payment rules by channel</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">Policy configuration will be added here.</p>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Channel</TableHead>
+                      <TableHead>Deposit</TableHead>
+                      <TableHead>Payment Due</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Walk-in</TableCell>
+                      <TableCell>None</TableCell>
+                      <TableCell>On arrival</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Booking.com</TableCell>
+                      <TableCell>10%</TableCell>
+                      <TableCell>At booking</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Expedia</TableCell>
+                      <TableCell>15%</TableCell>
+                      <TableCell>At booking</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </section>
       </div>
     </Layout>
   );
