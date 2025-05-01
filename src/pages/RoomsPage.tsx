@@ -1,9 +1,7 @@
-
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BedDouble, Wifi, Tv, DoorOpen, Plus, Calendar, List, Settings } from "lucide-react";
-import { Link } from "react-router-dom";
+import { BedDouble, Wifi, Tv, DoorOpen } from "lucide-react";
 
 type RoomStatus = "available" | "occupied" | "reserved" | "maintenance";
 
@@ -148,22 +146,6 @@ const RoomsPage = () => {
   return (
     <Layout>
       <div className="space-y-6">
-        {/* Room Module Navigation */}
-        <div className="flex bg-gray-900 p-2 mb-6 space-x-4">
-          <Link to="/rooms/calendar" className="flex items-center justify-center bg-gray-800 p-2 rounded">
-            <Calendar className="h-6 w-6 text-gray-400" />
-          </Link>
-          <Link to="/rooms/list" className="flex items-center justify-center bg-gray-800 p-2 rounded">
-            <List className="h-6 w-6 text-gray-400" />
-          </Link>
-          <Link to="/rooms/add" className="flex items-center justify-center bg-gray-800 p-2 rounded">
-            <Plus className="h-6 w-6 text-gray-400" />
-          </Link>
-          <Link to="/rooms/setup" className="flex items-center justify-center bg-gray-800 ml-auto p-2 rounded">
-            <Settings className="h-6 w-6 text-gray-400" />
-          </Link>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {rooms.map((room) => (
             <div 

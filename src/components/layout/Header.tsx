@@ -6,17 +6,11 @@ import {
   Settings, Calendar, List, FileText, Cog, MessageCircle, Car, Wrench,
   PlaneLanding, PlaneTakeoff, BedDouble, Clock, Plus
 } from 'lucide-react';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-// Module definitions
+// Module definitions with their submenus
 const modules = [
   {
     title: "Rooms",
@@ -55,6 +49,7 @@ const modules = [
     subMenu: [
       { title: "Housekeeping", icon: Bed, path: "/tasks/housekeeping" },
       { title: "Maintenance", icon: Wrench, path: "/tasks/maintenance" },
+      { title: "Car", icon: Car, path: "/tasks/car" },
       { title: "Setup", icon: Cog, path: "/tasks/setup" }
     ]
   },
@@ -88,16 +83,18 @@ const modules = [
 const Header = () => {
   const location = useLocation();
   const currentPath = location.pathname;
+  
+  // Find the current active module
   const currentMainModule = modules.find(module => 
     currentPath === module.path || currentPath.startsWith(`${module.path}/`)
   );
 
   return (
-    <header className="flex flex-col w-full bg-black text-white">
+    <header className="flex flex-col w-full bg-black text-white border-b border-purple-900">
       {/* Main navigation */}
-      <div className="h-16 flex items-center px-0 border-b border-gray-800 relative">
+      <div className="h-16 flex items-center px-0 relative">
         {/* Logo - reduced width */}
-        <Link to="/" className="flex items-center gap-2 px-4 py-2 border-r border-gray-800 h-full">
+        <Link to="/" className="flex items-center gap-2 px-4 py-2 border-r border-purple-900 h-full">
           <Hotel className="h-6 w-6 text-yellow-400" />
           <h1 className="text-xl font-bold hidden sm:block whitespace-nowrap">Hotel Esplanada</h1>
         </Link>
@@ -108,37 +105,51 @@ const Header = () => {
             const isActive = currentPath === module.path || currentPath.startsWith(`${module.path}/`);
             
             return (
-              <Link 
+              <div 
                 key={module.title}
-                to={module.path} 
                 className={cn(
-                  "flex-1 flex items-center justify-center gap-2 h-full border-r border-gray-800 transition-colors",
+                  "flex-1 flex items-center justify-center h-full border-r border-purple-900 transition-colors relative",
                   isActive ? `${module.bgColor} ${module.borderColor} border-b-2` : ''
                 )}
               >
-                <module.icon className={`h-5 w-5 ${module.color}`} />
-                <span className={`${module.color} font-medium`}>{module.title}</span>
-              </Link>
+                {isActive ? (
+                  // Show submenu when this module is active
+                  <div className="flex items-center justify-center gap-4 w-full">
+                    {module.subMenu.map((subItem) => (
+                      <Link 
+                        key={subItem.path}
+                        to={subItem.path}
+                        className={cn(
+                          "flex flex-col items-center justify-center p-1 rounded-md",
+                          currentPath === subItem.path ? `${module.color} bg-opacity-20 bg-black` : 'text-gray-300'
+                        )}
+                      >
+                        <subItem.icon className={cn("h-5 w-5", currentPath === subItem.path ? module.color : '')} />
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  // Show regular module button when not active
+                  <Link 
+                    to={module.path} 
+                    className="flex items-center justify-center gap-2 w-full h-full"
+                  >
+                    <module.icon className={`h-5 w-5 ${module.color}`} />
+                    <span className={`${module.color} font-medium`}>{module.title}</span>
+                  </Link>
+                )}
+              </div>
             );
           })}
         </div>
         
         {/* User menu */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-10 w-10 rounded-full border border-yellow-500 mx-2">
-              <Avatar className="h-9 w-9">
-                <AvatarImage src="" />
-                <AvatarFallback className="bg-gray-800 text-yellow-500">CF</AvatarFallback>
-              </Avatar>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Log out</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button variant="ghost" className="h-10 w-10 rounded-full border border-yellow-500 mx-2">
+          <Avatar className="h-9 w-9">
+            <AvatarImage src="" />
+            <AvatarFallback className="bg-gray-800 text-yellow-500">CF</AvatarFallback>
+          </Avatar>
+        </Button>
         
         <Button variant="outline" size="icon" className="border-gray-700 bg-gray-800 mr-2">
           <Settings className="h-4 w-4" />
