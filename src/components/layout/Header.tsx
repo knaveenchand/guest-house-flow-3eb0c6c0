@@ -92,10 +92,22 @@ const Header = () => {
     currentPath === module.path || currentPath.startsWith(`${module.path}/`)
   );
 
+  // Get module title for submenu header
+  const getModuleTitle = () => {
+    switch(currentMainModule?.title) {
+      case "Rooms": return "Room Management";
+      case "POS": return "Point of Sale";
+      case "Tasks": return "Task Management";
+      case "Finances": return "Financial Management";
+      case "Guest TV": return "Guest TV System";
+      default: return "Module";
+    }
+  };
+
   return (
-    <header className="flex flex-col w-full bg-black text-white border-b border-gray-800">
+    <header className="flex flex-col w-full bg-black text-white">
       {/* Main navigation */}
-      <div className="h-16 flex items-center px-0">
+      <div className="h-16 flex items-center px-0 border-b border-gray-800 relative">
         {/* Logo - reduced width */}
         <Link to="/" className="flex items-center gap-2 px-4 py-2 border-r border-gray-800 h-full">
           <Hotel className="h-6 w-6 text-yellow-400" />
@@ -105,18 +117,53 @@ const Header = () => {
         {/* Main modules - Full width flex */}
         <div className="flex-1 flex h-full">
           {modules.map((module) => (
-            <Link 
-              key={module.title}
-              to={module.path} 
-              className={cn(
-                "flex items-center justify-center gap-2 h-full border-r border-gray-800 flex-1 transition-colors",
-                currentPath === module.path || currentPath.startsWith(`${module.path}/`) 
-                  ? `${module.bgColor} ${module.borderColor} border-b-2` : ''
+            <div key={module.title} className="relative flex-1">
+              <Link 
+                to={module.path} 
+                className={cn(
+                  "flex items-center justify-center gap-2 h-full border-r border-gray-800 w-full transition-colors",
+                  currentPath === module.path || currentPath.startsWith(`${module.path}/`) 
+                    ? `${module.bgColor} ${module.borderColor} border-b-2` : ''
+                )}
+              >
+                <module.icon className={`h-5 w-5 ${module.color}`} />
+                <span className={`${module.color} font-medium`}>{module.title}</span>
+              </Link>
+              
+              {/* Submenu appears directly below the active module */}
+              {currentMainModule && currentMainModule.title === module.title && (
+                <div 
+                  className="absolute top-full left-0 right-0 py-2 px-4 border-b border-gray-800 z-10 w-full"
+                  style={{backgroundImage: "url('/lovable-uploads/97c17675-16c0-40af-a489-4ff7fd88d016.png')", backgroundSize: "cover", backgroundPosition: "center"}}
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <h2 className="text-xl font-bold text-white">{getModuleTitle()}</h2>
+                    {module.title === "Rooms" && (
+                      <Button className="bg-blue-600">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add Reservation
+                      </Button>
+                    )}
+                  </div>
+                  <div className="flex space-x-2">
+                    {module.subMenu.map((item) => (
+                      <Link 
+                        key={item.title}
+                        to={item.path} 
+                        className={`flex items-center justify-center gap-1 px-4 py-2 rounded-md ${
+                          currentPath === item.path 
+                            ? `bg-gray-800/70 ${module.color}` 
+                            : `hover:bg-gray-800/30 text-white`
+                        }`}
+                      >
+                        <item.icon className={`h-4 w-4 ${currentPath === item.path ? module.color : 'text-white'}`} />
+                        <span className={`font-medium ${currentPath === item.path ? module.color : 'text-white'}`}>{item.title}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               )}
-            >
-              <module.icon className={`h-5 w-5 ${module.color}`} />
-              <span className={`${module.color} font-medium`}>{module.title}</span>
-            </Link>
+            </div>
           ))}
         </div>
         
@@ -141,38 +188,6 @@ const Header = () => {
           <Settings className="h-4 w-4" />
         </Button>
       </div>
-      
-      {/* Submenu for current module using the actual background image */}
-      {currentMainModule && currentMainModule.subMenu && currentMainModule.subMenu.length > 0 && (
-        <div 
-          className={`py-2 px-4 border-b border-gray-800 flex flex-col`} 
-          style={{backgroundImage: "url('/lovable-uploads/f7381cb7-1a8e-417c-b9fa-add95fb36d5c.png')", backgroundSize: "cover", backgroundPosition: "center"}}
-        >
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-xl font-bold text-white">Room Management</h2>
-            <Button className="bg-blue-600">
-              <Plus className="mr-2 h-4 w-4" />
-              Add Reservation
-            </Button>
-          </div>
-          <div className="flex space-x-2">
-            {currentMainModule.subMenu.map((item) => (
-              <Link 
-                key={item.title}
-                to={item.path} 
-                className={`flex items-center justify-center gap-1 px-4 py-2 rounded-md ${
-                  currentPath === item.path 
-                    ? `bg-gray-800/70 ${currentMainModule.color}` 
-                    : `hover:bg-gray-800/30 text-white`
-                }`}
-              >
-                <item.icon className={`h-4 w-4 ${currentPath === item.path ? currentMainModule.color : 'text-white'}`} />
-                <span className={`font-medium ${currentPath === item.path ? currentMainModule.color : 'text-white'}`}>{item.title}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
     </header>
   );
 };
