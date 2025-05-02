@@ -88,7 +88,7 @@ const RatesTable = ({ roomTypeList, bookingChannels, ratesData, handleRateChange
     handleDiscountChange(roomType, channel, type, newValue);
   };
 
-  // Function to get the color for the room type
+  // Map color names to Tailwind background classes
   const getRoomTypeColor = (color: string) => {
     const colorMap: Record<string, string> = {
       blue: "bg-blue-50",
@@ -148,20 +148,20 @@ const RatesTable = ({ roomTypeList, bookingChannels, ratesData, handleRateChange
                     className={cn("p-2", getRoomTypeColor(roomType.color))}
                   >
                     <div className="flex items-center justify-between gap-1">
-                      {/* Percent discount with up/down arrows - smaller size */}
-                      <div className="flex flex-col w-10">
-                        <div className="flex">
+                      {/* Percent discount with improved up/down buttons */}
+                      <div className="flex flex-col w-8">
+                        <div className="flex relative">
                           <Input 
                             type="text"
                             value={discounts[roomType.name]?.[channel]?.percent || "0"}
                             onChange={(e) => handleDiscountChange(roomType.name, channel, "percent", e.target.value)}
-                            className="w-full text-center pr-5 py-0 h-6 text-xs"
+                            className="w-full text-center pr-4 py-0 h-6 text-xs"
                           />
                           <div className="flex flex-col absolute right-0 h-full">
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-3 w-3 p-0" 
+                              className="h-3 w-3 p-0 hover:bg-transparent" 
                               onClick={() => incrementDiscount(roomType.name, channel, "percent")}
                             >
                               <ArrowUp className="h-2 w-2" />
@@ -169,7 +169,7 @@ const RatesTable = ({ roomTypeList, bookingChannels, ratesData, handleRateChange
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-3 w-3 p-0" 
+                              className="h-3 w-3 p-0 hover:bg-transparent" 
                               onClick={() => decrementDiscount(roomType.name, channel, "percent")}
                             >
                               <ArrowDown className="h-2 w-2" />
@@ -182,28 +182,28 @@ const RatesTable = ({ roomTypeList, bookingChannels, ratesData, handleRateChange
                       {/* Main rate input */}
                       <div className="flex flex-col">
                         <Input 
-                          type="price"
+                          type="text"
                           value={ratesData[roomType.name]?.[channel] || "0"}
                           onChange={(e) => handleRateChange(roomType.name, channel, e.target.value)}
-                          className="max-w-[60px] h-7 text-sm"
+                          className="max-w-[60px] h-7 text-sm font-medium bg-white dark:bg-gray-800"
                         />
                         <span className="text-[8px] text-center text-muted-foreground">Rate</span>
                       </div>
                       
-                      {/* Amount discount with up/down arrows - smaller size */}
-                      <div className="flex flex-col w-10">
-                        <div className="flex">
+                      {/* Amount discount with improved up/down buttons */}
+                      <div className="flex flex-col w-8">
+                        <div className="flex relative">
                           <Input 
                             type="text"
                             value={discounts[roomType.name]?.[channel]?.amount || "0"}
                             onChange={(e) => handleDiscountChange(roomType.name, channel, "amount", e.target.value)}
-                            className="w-full text-center pr-5 py-0 h-6 text-xs"
+                            className="w-full text-center pr-4 py-0 h-6 text-xs"
                           />
                           <div className="flex flex-col absolute right-0 h-full">
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-3 w-3 p-0" 
+                              className="h-3 w-3 p-0 hover:bg-transparent" 
                               onClick={() => incrementDiscount(roomType.name, channel, "amount")}
                             >
                               <ArrowUp className="h-2 w-2" />
@@ -211,7 +211,7 @@ const RatesTable = ({ roomTypeList, bookingChannels, ratesData, handleRateChange
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-3 w-3 p-0" 
+                              className="h-3 w-3 p-0 hover:bg-transparent" 
                               onClick={() => decrementDiscount(roomType.name, channel, "amount")}
                             >
                               <ArrowDown className="h-2 w-2" />
