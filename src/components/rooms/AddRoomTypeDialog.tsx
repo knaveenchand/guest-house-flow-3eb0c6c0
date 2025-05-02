@@ -9,6 +9,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -84,6 +85,9 @@ const AddRoomTypeDialog = ({
   availableAmenities,
   resetRoomTypeForm,
 }: AddRoomTypeDialogProps) => {
+  // Sort available amenities alphabetically
+  const sortedAvailableAmenities = [...availableAmenities].sort();
+  
   const handleAddRoomNumber = () => {
     if (newRoomNumber && !roomNumbers.includes(newRoomNumber)) {
       setRoomNumbers([...roomNumbers, newRoomNumber]);
@@ -108,6 +112,9 @@ const AddRoomTypeDialog = ({
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{isEditMode ? "Edit Room Type" : "Add New Room Type"}</DialogTitle>
+          <DialogDescription>
+            Fill in the details for this room type
+          </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
@@ -191,14 +198,14 @@ const AddRoomTypeDialog = ({
             </div>
           </div>
           
-          {/* Amenities */}
+          {/* Amenities (alphabetically sorted) */}
           <div className="grid grid-cols-4 items-start gap-4">
             <Label className="text-right pt-2">
               Amenities
             </Label>
             <div className="col-span-3">
               <div className="flex flex-wrap gap-2">
-                {availableAmenities.map((amenity) => (
+                {sortedAvailableAmenities.map((amenity) => (
                   <Badge 
                     key={amenity} 
                     variant={selectedAmenities.includes(amenity) ? "default" : "outline"}
@@ -210,7 +217,7 @@ const AddRoomTypeDialog = ({
                 ))}
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Selected: {selectedAmenities.join(", ")}
+                Selected: {selectedAmenities.sort().join(", ")}
               </p>
             </div>
           </div>

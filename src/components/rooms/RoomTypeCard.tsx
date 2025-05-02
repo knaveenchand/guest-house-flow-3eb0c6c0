@@ -1,5 +1,5 @@
 
-import { BedDouble, Edit } from "lucide-react";
+import { BedDouble, Edit, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,6 +13,7 @@ interface RoomTypeCardProps {
     color: string;
     roomNumbers: string[];
     amenities: string[];
+    maxGuests: number;
   };
   onEdit: (index: number) => void;
   index: number;
@@ -41,6 +42,9 @@ const RoomTypeCard = ({ room, onEdit, index }: RoomTypeCardProps) => {
     fuchsia: "bg-fuchsia-500",
   };
 
+  // Sort amenities alphabetically
+  const sortedAmenities = [...room.amenities].sort();
+
   return (
     <Card key={room.name} className="w-full">
       <CardContent className="pt-4">
@@ -55,32 +59,44 @@ const RoomTypeCard = ({ room, onEdit, index }: RoomTypeCardProps) => {
         </div>
         <p className="text-sm text-muted-foreground mb-3">{room.description}</p>
         
-        {/* Room details as rows */}
-        <div className="grid grid-cols-1 gap-2">
-          {/* Room numbers row */}
-          <div className="flex">
-            <div className="w-1/3 text-xs font-medium">Room numbers:</div>
-            <div className="w-2/3 text-xs text-muted-foreground">
-              {room.roomNumbers?.slice(0, 5).join(", ") || "None"}
-              {room.roomNumbers?.length > 5 && ` +${room.roomNumbers.length - 5} more`}
+        {/* Three column layout */}
+        <div className="grid grid-cols-3 gap-4">
+          {/* Column A: Room Type & Number of Rooms */}
+          <div className="space-y-2">
+            <div className="text-xs font-medium">Room Type</div>
+            <div className="text-xs text-muted-foreground">{room.name}</div>
+            
+            <div className="text-xs font-medium mt-2">Room Numbers</div>
+            <div className="text-xs text-muted-foreground">
+              {room.roomNumbers?.slice(0, 3).join(", ") || "None"}
+              {room.roomNumbers?.length > 3 && ` +${room.roomNumbers.length - 3} more`}
             </div>
           </div>
           
-          {/* Amenities row */}
-          <div className="flex">
-            <div className="w-1/3 text-xs font-medium">Amenities:</div>
-            <div className="w-2/3 text-xs text-muted-foreground">
-              <div className="flex flex-col">
-                {room.amenities?.length > 0 ? (
-                  room.amenities.map((amenity, i) => (
-                    <span key={i} className="mb-1">
-                      {amenity}
-                    </span>
-                  ))
-                ) : (
-                  <span>None</span>
-                )}
-              </div>
+          {/* Column B: Number of Guests */}
+          <div className="space-y-2">
+            <div className="text-xs font-medium flex items-center gap-1">
+              <Users className="h-3.5 w-3.5" />
+              <span>Guests</span>
+            </div>
+            <div className="text-xs text-muted-foreground">
+              Max {room.maxGuests || 2} per room
+            </div>
+          </div>
+          
+          {/* Column C: Amenities (alphabetical) */}
+          <div className="space-y-2">
+            <div className="text-xs font-medium">Amenities</div>
+            <div className="space-y-1">
+              {sortedAmenities.length > 0 ? (
+                sortedAmenities.map((amenity, i) => (
+                  <div key={i} className="text-xs text-muted-foreground">
+                    {amenity}
+                  </div>
+                ))
+              ) : (
+                <div className="text-xs text-muted-foreground">None</div>
+              )}
             </div>
           </div>
         </div>
