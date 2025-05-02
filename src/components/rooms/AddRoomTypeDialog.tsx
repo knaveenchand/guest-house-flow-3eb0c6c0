@@ -13,6 +13,35 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+
+// Define the color palette
+const colorOptions = [
+  "blue", "indigo", "purple", "pink", "green", "yellow", "orange", "red", "gray",
+  "cyan", "teal", "lime", "emerald", "sky", "rose", "amber", "violet", "fuchsia"
+];
+
+// Map colors to Tailwind classes
+const colorMap: Record<string, string> = {
+  blue: "bg-blue-500",
+  indigo: "bg-indigo-500",
+  purple: "bg-purple-500",
+  pink: "bg-pink-500",
+  green: "bg-green-500",
+  yellow: "bg-yellow-500",
+  orange: "bg-orange-500",
+  red: "bg-red-500",
+  gray: "bg-gray-500",
+  cyan: "bg-cyan-500",
+  teal: "bg-teal-500",
+  lime: "bg-lime-500",
+  emerald: "bg-emerald-500",
+  sky: "bg-sky-500",
+  rose: "bg-rose-500",
+  amber: "bg-amber-500",
+  violet: "bg-violet-500",
+  fuchsia: "bg-fuchsia-500",
+};
 
 interface RoomType {
   name: string;
@@ -193,14 +222,21 @@ const AddRoomTypeDialog = ({
             </Label>
             <div className="col-span-3">
               <div className="flex flex-wrap gap-2">
-                {["blue", "indigo", "purple", "pink", "green", "yellow", "orange", "red", "gray"].map((color) => (
+                {colorOptions.map((color) => (
                   <div 
                     key={color} 
-                    className={`w-8 h-8 rounded-full cursor-pointer border-2 ${newRoomType.color === color ? 'border-black' : 'border-transparent'} bg-${color}-500`}
+                    className={cn(
+                      "w-8 h-8 rounded-full cursor-pointer border-2", 
+                      newRoomType.color === color ? "border-black" : "border-transparent",
+                      colorMap[color]
+                    )}
                     onClick={() => setNewRoomType({ ...newRoomType, color })}
                   />
                 ))}
               </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Selected color: {newRoomType.color}
+              </p>
             </div>
           </div>
         </div>

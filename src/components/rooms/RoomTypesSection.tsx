@@ -171,6 +171,11 @@ const RoomTypesSection = ({ roomTypeList, setRoomTypeList, ratesData, setRatesDa
             index={index}
           />
         ))}
+        {roomTypeList.length === 0 && (
+          <div className="col-span-3 text-center py-10 border border-dashed rounded-md">
+            <p className="text-muted-foreground">No room types yet. Add your first room type to get started.</p>
+          </div>
+        )}
       </div>
 
       <AddRoomTypeDialog
