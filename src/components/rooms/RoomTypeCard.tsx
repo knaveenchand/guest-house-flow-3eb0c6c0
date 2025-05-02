@@ -42,9 +42,9 @@ const RoomTypeCard = ({ room, onEdit, index }: RoomTypeCardProps) => {
   };
 
   return (
-    <Card key={room.name}>
+    <Card key={room.name} className="w-full">
       <CardContent className="pt-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <BedDouble className={`h-5 w-5 text-${room.color}-500`} />
             <h3 className="font-medium">{room.name}</h3>
@@ -53,17 +53,35 @@ const RoomTypeCard = ({ room, onEdit, index }: RoomTypeCardProps) => {
             {room.totalRooms || room.roomNumbers?.length || 0} rooms
           </Badge>
         </div>
-        <p className="text-sm text-muted-foreground mt-2">{room.description}</p>
+        <p className="text-sm text-muted-foreground mb-3">{room.description}</p>
         
-        {/* Room details */}
-        <div className="mt-3">
-          <div className="text-xs text-muted-foreground mt-1">
-            <strong>Room numbers:</strong> {room.roomNumbers?.slice(0, 5).join(", ") || "None"}
-            {room.roomNumbers?.length > 5 && ` +${room.roomNumbers.length - 5} more`}
+        {/* Room details as rows */}
+        <div className="grid grid-cols-1 gap-2">
+          {/* Room numbers row */}
+          <div className="flex">
+            <div className="w-1/3 text-xs font-medium">Room numbers:</div>
+            <div className="w-2/3 text-xs text-muted-foreground">
+              {room.roomNumbers?.slice(0, 5).join(", ") || "None"}
+              {room.roomNumbers?.length > 5 && ` +${room.roomNumbers.length - 5} more`}
+            </div>
           </div>
-          <div className="text-xs text-muted-foreground mt-1">
-            <strong>Amenities:</strong> {room.amenities?.slice(0, 4).join(", ") || "None"}
-            {room.amenities?.length > 4 && ` +${room.amenities.length - 4} more`}
+          
+          {/* Amenities row */}
+          <div className="flex">
+            <div className="w-1/3 text-xs font-medium">Amenities:</div>
+            <div className="w-2/3 text-xs text-muted-foreground">
+              <div className="flex flex-col">
+                {room.amenities?.length > 0 ? (
+                  room.amenities.map((amenity, i) => (
+                    <span key={i} className="mb-1">
+                      {amenity}
+                    </span>
+                  ))
+                ) : (
+                  <span>None</span>
+                )}
+              </div>
+            </div>
           </div>
         </div>
         

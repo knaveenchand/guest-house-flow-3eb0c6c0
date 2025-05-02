@@ -162,7 +162,7 @@ const RoomTypesSection = ({ roomTypeList, setRoomTypeList, ratesData, setRatesDa
         </Button>
       </div>
       
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 grid-cols-1">
         {roomTypeList.map((room, index) => (
           <RoomTypeCard 
             key={room.name}
@@ -172,7 +172,7 @@ const RoomTypesSection = ({ roomTypeList, setRoomTypeList, ratesData, setRatesDa
           />
         ))}
         {roomTypeList.length === 0 && (
-          <div className="col-span-3 text-center py-10 border border-dashed rounded-md">
+          <div className="text-center py-10 border border-dashed rounded-md">
             <p className="text-muted-foreground">No room types yet. Add your first room type to get started.</p>
           </div>
         )}
