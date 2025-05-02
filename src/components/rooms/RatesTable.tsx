@@ -6,10 +6,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface RatesTableProps {
   roomTypeList: Array<{
     name: string;
+    color: string;
   }>;
   bookingChannels: string[];
   ratesData: Record<string, Record<string, string>>;
@@ -86,6 +88,32 @@ const RatesTable = ({ roomTypeList, bookingChannels, ratesData, handleRateChange
     handleDiscountChange(roomType, channel, type, newValue);
   };
 
+  // Function to get the color for the room type
+  const getRoomTypeColor = (color: string) => {
+    const colorMap: Record<string, string> = {
+      blue: "bg-blue-50",
+      indigo: "bg-indigo-50",
+      purple: "bg-purple-50",
+      pink: "bg-pink-50",
+      green: "bg-green-50",
+      yellow: "bg-yellow-50",
+      orange: "bg-orange-50",
+      red: "bg-red-50",
+      gray: "bg-gray-50",
+      cyan: "bg-cyan-50",
+      teal: "bg-teal-50",
+      lime: "bg-lime-50",
+      emerald: "bg-emerald-50",
+      sky: "bg-sky-50",
+      rose: "bg-rose-50",
+      amber: "bg-amber-50",
+      violet: "bg-violet-50",
+      fuchsia: "bg-fuchsia-50"
+    };
+    
+    return colorMap[color] || "bg-gray-50";
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -115,37 +143,40 @@ const RatesTable = ({ roomTypeList, bookingChannels, ratesData, handleRateChange
               <TableRow key={channel}>
                 <TableCell className="font-medium">{channel}</TableCell>
                 {roomTypeList.map((roomType) => (
-                  <TableCell key={`${channel}-${roomType.name}`} className="p-2">
-                    <div className="flex items-center justify-between gap-2">
-                      {/* Percent discount with up/down arrows */}
-                      <div className="flex flex-col w-16">
+                  <TableCell 
+                    key={`${channel}-${roomType.name}`} 
+                    className={cn("p-2", getRoomTypeColor(roomType.color))}
+                  >
+                    <div className="flex items-center justify-between gap-1">
+                      {/* Percent discount with up/down arrows - smaller size */}
+                      <div className="flex flex-col w-10">
                         <div className="flex">
                           <Input 
                             type="text"
                             value={discounts[roomType.name]?.[channel]?.percent || "0"}
                             onChange={(e) => handleDiscountChange(roomType.name, channel, "percent", e.target.value)}
-                            className="w-full text-center pr-5 py-1 h-8 text-xs"
+                            className="w-full text-center pr-5 py-0 h-6 text-xs"
                           />
                           <div className="flex flex-col absolute right-0 h-full">
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-4 w-4 p-0" 
+                              className="h-3 w-3 p-0" 
                               onClick={() => incrementDiscount(roomType.name, channel, "percent")}
                             >
-                              <ArrowUp className="h-3 w-3" />
+                              <ArrowUp className="h-2 w-2" />
                             </Button>
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-4 w-4 p-0" 
+                              className="h-3 w-3 p-0" 
                               onClick={() => decrementDiscount(roomType.name, channel, "percent")}
                             >
-                              <ArrowDown className="h-3 w-3" />
+                              <ArrowDown className="h-2 w-2" />
                             </Button>
                           </div>
                         </div>
-                        <span className="text-[10px] text-center text-muted-foreground">Discount %</span>
+                        <span className="text-[8px] text-center text-muted-foreground">%</span>
                       </div>
                       
                       {/* Main rate input */}
@@ -154,40 +185,40 @@ const RatesTable = ({ roomTypeList, bookingChannels, ratesData, handleRateChange
                           type="price"
                           value={ratesData[roomType.name]?.[channel] || "0"}
                           onChange={(e) => handleRateChange(roomType.name, channel, e.target.value)}
-                          className="max-w-[80px] h-8"
+                          className="max-w-[60px] h-7 text-sm"
                         />
-                        <span className="text-[10px] text-center text-muted-foreground">Rate</span>
+                        <span className="text-[8px] text-center text-muted-foreground">Rate</span>
                       </div>
                       
-                      {/* Amount discount with up/down arrows */}
-                      <div className="flex flex-col w-16">
+                      {/* Amount discount with up/down arrows - smaller size */}
+                      <div className="flex flex-col w-10">
                         <div className="flex">
                           <Input 
                             type="text"
                             value={discounts[roomType.name]?.[channel]?.amount || "0"}
                             onChange={(e) => handleDiscountChange(roomType.name, channel, "amount", e.target.value)}
-                            className="w-full text-center pr-5 py-1 h-8 text-xs"
+                            className="w-full text-center pr-5 py-0 h-6 text-xs"
                           />
                           <div className="flex flex-col absolute right-0 h-full">
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-4 w-4 p-0" 
+                              className="h-3 w-3 p-0" 
                               onClick={() => incrementDiscount(roomType.name, channel, "amount")}
                             >
-                              <ArrowUp className="h-3 w-3" />
+                              <ArrowUp className="h-2 w-2" />
                             </Button>
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-4 w-4 p-0" 
+                              className="h-3 w-3 p-0" 
                               onClick={() => decrementDiscount(roomType.name, channel, "amount")}
                             >
-                              <ArrowDown className="h-3 w-3" />
+                              <ArrowDown className="h-2 w-2" />
                             </Button>
                           </div>
                         </div>
-                        <span className="text-[10px] text-center text-muted-foreground">Discount $</span>
+                        <span className="text-[8px] text-center text-muted-foreground">$</span>
                       </div>
                     </div>
                   </TableCell>
