@@ -61,17 +61,22 @@ const RoomTypeCard = ({ room, onEdit, index }: RoomTypeCardProps) => {
         
         {/* Four column layout */}
         <div className="grid grid-cols-4 gap-4">
-          {/* Column 1: Room Type */}
-          <div className="space-y-2">
-            <div className="text-xs font-medium">Room Type</div>
-            <div className="text-xs text-muted-foreground">{room.name}</div>
-          </div>
-          
-          {/* Column 2: Number of Rooms */}
+          {/* Column 1: Number of Rooms */}
           <div className="space-y-2">
             <div className="text-xs font-medium">Number of Rooms</div>
             <div className="text-xs text-muted-foreground">
               {room.totalRooms || room.roomNumbers?.length || 0}
+            </div>
+          </div>
+          
+          {/* Column 2: Number of Guests */}
+          <div className="space-y-2">
+            <div className="text-xs font-medium flex items-center gap-1">
+              <Users className="h-3.5 w-3.5" />
+              <span>Guests</span>
+            </div>
+            <div className="text-xs text-muted-foreground">
+              Max {room.maxGuests || 2} per room
             </div>
           </div>
           
@@ -81,15 +86,6 @@ const RoomTypeCard = ({ room, onEdit, index }: RoomTypeCardProps) => {
             <div className="text-xs text-muted-foreground">
               {room.roomNumbers?.slice(0, 3).join(", ") || "None"}
               {room.roomNumbers?.length > 3 && ` +${room.roomNumbers.length - 3} more`}
-            </div>
-            
-            {/* Guest info in same column below room numbers */}
-            <div className="text-xs font-medium flex items-center gap-1 mt-2">
-              <Users className="h-3.5 w-3.5" />
-              <span>Guests</span>
-            </div>
-            <div className="text-xs text-muted-foreground">
-              Max {room.maxGuests || 2} per room
             </div>
           </div>
           
