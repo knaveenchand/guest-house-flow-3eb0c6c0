@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import { toast } from "sonner";
 import RoomTypesSection from "@/components/rooms/RoomTypesSection";
@@ -80,10 +80,51 @@ const initialRatesData = {
   }
 };
 
+// Storage keys for persisting data
+const STORAGE_KEYS = {
+  ROOM_TYPES: "hotel_room_types",
+  RATES_DATA: "hotel_rates_data",
+  BOOKING_CHANNELS: "hotel_booking_channels"
+};
+
 const RoomsSetupPage = () => {
   const [ratesData, setRatesData] = useState(initialRatesData);
   const [bookingChannels, setBookingChannels] = useState(initialBookingChannels);
   const [roomTypeList, setRoomTypeList] = useState(roomTypes);
+  
+  // Load data from localStorage on component mount
+  useEffect(() => {
+    const savedRoomTypes = localStorage.getItem(STORAGE_KEYS.ROOM_TYPES);
+    const savedRatesData = localStorage.getItem(STORAGE_KEYS.RATES_DATA);
+    const savedBookingChannels = localStorage.getItem(STORAGE_KEYS.BOOKING_CHANNELS);
+    
+    if (savedRoomTypes) {
+      setRoomTypeList(JSON.parse(savedRoomTypes));
+    }
+    
+    if (savedRatesData) {
+      setRatesData(JSON.parse(savedRatesData));
+    }
+    
+    if (savedBookingChannels) {
+      setBookingChannels(JSON.parse(savedBookingChannels));
+    }
+  }, []);
+  
+  // Save room types to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.ROOM_TYPES, JSON.stringify(roomTypeList));
+  }, [roomTypeList]);
+  
+  // Save rates data to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.RATES_DATA, JSON.stringify(ratesData));
+  }, [ratesData]);
+  
+  // Save booking channels to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.BOOKING_CHANNELS, JSON.stringify(bookingChannels));
+  }, [bookingChannels]);
   
   const handleRateChange = (roomType: string, channel: string, value: string) => {
     // Only allow numeric input with optional decimal point
@@ -117,6 +158,8 @@ const RoomsSetupPage = () => {
       });
       return updated;
     });
+    
+    toast.success(`Added ${channelName} to booking channels`);
   };
 
   const handleEditChannel = (oldChannel: string, newChannel: string) => {
@@ -137,10 +180,15 @@ const RoomsSetupPage = () => {
       });
       return updated;
     });
+    
+    toast.success(`Updated channel from ${oldChannel} to ${newChannel}`);
   };
 
   const handleDeleteChannel = (channel: string) => {
-    if (channel === "Walk-in") return; // Protect default channel
+    if (channel === "Walk-in") {
+      toast.error("Cannot delete the default Walk-in channel");
+      return; // Protect default channel
+    }
     
     // Remove the channel from the list
     setBookingChannels(prev => 
@@ -156,6 +204,8 @@ const RoomsSetupPage = () => {
       });
       return updated;
     });
+    
+    toast.success(`Deleted ${channel} from booking channels`);
   };
 
   return (

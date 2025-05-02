@@ -103,11 +103,11 @@ const RoomTypesSection = ({ roomTypeList, setRoomTypeList, ratesData, setRatesDa
     if (isEditMode && editingRoomTypeIndex !== null) {
       // Update existing room type
       const updatedList = [...roomTypeList];
+      const oldName = updatedList[editingRoomTypeIndex].name;
       updatedList[editingRoomTypeIndex] = roomTypeData;
       setRoomTypeList(updatedList);
       
       // Update rates if the room name changed
-      const oldName = roomTypeList[editingRoomTypeIndex].name;
       if (oldName !== roomTypeData.name) {
         const updatedRates = { ...ratesData };
         updatedRates[roomTypeData.name] = updatedRates[oldName];
@@ -117,6 +117,12 @@ const RoomTypesSection = ({ roomTypeList, setRoomTypeList, ratesData, setRatesDa
       
       toast.success(`${roomTypeData.name} updated successfully`);
     } else {
+      // Check if room type with same name already exists
+      if (roomTypeList.some(room => room.name === roomTypeData.name)) {
+        toast.error(`Room type "${roomTypeData.name}" already exists`);
+        return;
+      }
+      
       // Add new room type to the list
       setRoomTypeList([...roomTypeList, roomTypeData]);
       
@@ -124,7 +130,10 @@ const RoomTypesSection = ({ roomTypeList, setRoomTypeList, ratesData, setRatesDa
       const newRates = { ...ratesData };
       newRates[newRoomType.name] = {};
       bookingChannels.forEach(channel => {
-        newRates[newRoomType.name][channel] = "0";
+        // Default to the Walk-in rate or 100 if no rates exist yet
+        const defaultRate = bookingChannels.includes("Walk-in") ? 
+          (newRates["Standard Room"]?.["Walk-in"] || "100") : "100";
+        newRates[newRoomType.name][channel] = defaultRate;
       });
       setRatesData(newRates);
       
