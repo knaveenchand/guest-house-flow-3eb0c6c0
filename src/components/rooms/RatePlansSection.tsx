@@ -30,7 +30,7 @@ const RatePlansSection = ({
   return (
     <section>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold">Rate Plans</h2>
+        <h2 className="text-xl font-semibold">Rates & Channels</h2>
         <Button onClick={handleAddRatePlan}>
           <Plus className="h-4 w-4 mr-2" />
           Add Rate Plan

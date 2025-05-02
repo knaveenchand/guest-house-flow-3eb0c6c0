@@ -1,10 +1,11 @@
 
-import { Save } from "lucide-react";
+import { Save, ArrowUp, ArrowDown } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { useState } from "react";
 
 interface RatesTableProps {
   roomTypeList: Array<{
@@ -15,10 +16,74 @@ interface RatesTableProps {
   handleRateChange: (roomType: string, channel: string, value: string) => void;
 }
 
+interface DiscountData {
+  [roomType: string]: {
+    [channel: string]: {
+      percent: string;
+      amount: string;
+    }
+  }
+}
+
 const RatesTable = ({ roomTypeList, bookingChannels, ratesData, handleRateChange }: RatesTableProps) => {
+  const [discounts, setDiscounts] = useState<DiscountData>(() => {
+    // Initialize discount data structure
+    const initialDiscounts: DiscountData = {};
+    roomTypeList.forEach(room => {
+      initialDiscounts[room.name] = {};
+      bookingChannels.forEach(channel => {
+        initialDiscounts[room.name][channel] = { percent: "0", amount: "0" };
+      });
+    });
+    return initialDiscounts;
+  });
+
   const handleSaveRates = () => {
     // This would save the rates to the backend
     toast.success("Rates have been saved successfully");
+  };
+
+  const handleDiscountChange = (
+    roomType: string, 
+    channel: string, 
+    type: "percent" | "amount", 
+    value: string
+  ) => {
+    // Only allow numeric input with optional decimal point
+    if (!/^\d*\.?\d*$/.test(value) && value !== '') {
+      return;
+    }
+
+    setDiscounts(prev => ({
+      ...prev,
+      [roomType]: {
+        ...prev[roomType],
+        [channel]: {
+          ...prev[roomType][channel],
+          [type]: value
+        }
+      }
+    }));
+  };
+
+  const incrementDiscount = (
+    roomType: string, 
+    channel: string, 
+    type: "percent" | "amount"
+  ) => {
+    const currentValue = discounts[roomType]?.[channel]?.[type] || "0";
+    const newValue = (parseFloat(currentValue) + 1).toString();
+    handleDiscountChange(roomType, channel, type, newValue);
+  };
+
+  const decrementDiscount = (
+    roomType: string, 
+    channel: string, 
+    type: "percent" | "amount"
+  ) => {
+    const currentValue = discounts[roomType]?.[channel]?.[type] || "0";
+    const newValue = Math.max(0, parseFloat(currentValue) - 1).toString();
+    handleDiscountChange(roomType, channel, type, newValue);
   };
 
   return (
@@ -41,7 +106,7 @@ const RatesTable = ({ roomTypeList, bookingChannels, ratesData, handleRateChange
             <TableRow>
               <TableHead>Channel</TableHead>
               {roomTypeList.map((roomType) => (
-                <TableHead key={roomType.name}>{roomType.name}</TableHead>
+                <TableHead key={roomType.name} className="text-center">{roomType.name}</TableHead>
               ))}
             </TableRow>
           </TableHeader>
@@ -50,13 +115,81 @@ const RatesTable = ({ roomTypeList, bookingChannels, ratesData, handleRateChange
               <TableRow key={channel}>
                 <TableCell className="font-medium">{channel}</TableCell>
                 {roomTypeList.map((roomType) => (
-                  <TableCell key={`${channel}-${roomType.name}`}>
-                    <Input 
-                      type="price"
-                      value={ratesData[roomType.name]?.[channel] || "0"}
-                      onChange={(e) => handleRateChange(roomType.name, channel, e.target.value)}
-                      className="max-w-[100px]"
-                    />
+                  <TableCell key={`${channel}-${roomType.name}`} className="p-2">
+                    <div className="flex items-center justify-between gap-2">
+                      {/* Percent discount with up/down arrows */}
+                      <div className="flex flex-col w-16">
+                        <div className="flex">
+                          <Input 
+                            type="text"
+                            value={discounts[roomType.name]?.[channel]?.percent || "0"}
+                            onChange={(e) => handleDiscountChange(roomType.name, channel, "percent", e.target.value)}
+                            className="w-full text-center pr-5 py-1 h-8 text-xs"
+                          />
+                          <div className="flex flex-col absolute right-0 h-full">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-4 w-4 p-0" 
+                              onClick={() => incrementDiscount(roomType.name, channel, "percent")}
+                            >
+                              <ArrowUp className="h-3 w-3" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-4 w-4 p-0" 
+                              onClick={() => decrementDiscount(roomType.name, channel, "percent")}
+                            >
+                              <ArrowDown className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                        <span className="text-[10px] text-center text-muted-foreground">Discount %</span>
+                      </div>
+                      
+                      {/* Main rate input */}
+                      <div className="flex flex-col">
+                        <Input 
+                          type="price"
+                          value={ratesData[roomType.name]?.[channel] || "0"}
+                          onChange={(e) => handleRateChange(roomType.name, channel, e.target.value)}
+                          className="max-w-[80px] h-8"
+                        />
+                        <span className="text-[10px] text-center text-muted-foreground">Rate</span>
+                      </div>
+                      
+                      {/* Amount discount with up/down arrows */}
+                      <div className="flex flex-col w-16">
+                        <div className="flex">
+                          <Input 
+                            type="text"
+                            value={discounts[roomType.name]?.[channel]?.amount || "0"}
+                            onChange={(e) => handleDiscountChange(roomType.name, channel, "amount", e.target.value)}
+                            className="w-full text-center pr-5 py-1 h-8 text-xs"
+                          />
+                          <div className="flex flex-col absolute right-0 h-full">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-4 w-4 p-0" 
+                              onClick={() => incrementDiscount(roomType.name, channel, "amount")}
+                            >
+                              <ArrowUp className="h-3 w-3" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-4 w-4 p-0" 
+                              onClick={() => decrementDiscount(roomType.name, channel, "amount")}
+                            >
+                              <ArrowDown className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                        <span className="text-[10px] text-center text-muted-foreground">Discount $</span>
+                      </div>
+                    </div>
                   </TableCell>
                 ))}
               </TableRow>
