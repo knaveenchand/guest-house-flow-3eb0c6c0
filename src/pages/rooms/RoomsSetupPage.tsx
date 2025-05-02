@@ -8,7 +8,7 @@ import BookingChannelsSection from "@/components/rooms/BookingChannelsSection";
 import PoliciesSection from "@/components/rooms/PoliciesSection";
 
 // Booking channels
-const bookingChannels = [
+const initialBookingChannels = [
   "Walk-in",
   "Booking.com",
   "Expedia",
@@ -82,7 +82,7 @@ const initialRatesData = {
 
 const RoomsSetupPage = () => {
   const [ratesData, setRatesData] = useState(initialRatesData);
-  const [editingChannel, setEditingChannel] = useState<string | null>(null);
+  const [bookingChannels, setBookingChannels] = useState(initialBookingChannels);
   const [roomTypeList, setRoomTypeList] = useState(roomTypes);
   
   const handleRateChange = (roomType: string, channel: string, value: string) => {
@@ -105,14 +105,57 @@ const RoomsSetupPage = () => {
     toast.success("Add Rate Plan functionality will be implemented here");
   };
 
-  const handleAddChannel = () => {
-    // This would open a modal to add a new channel
-    toast.success("Add Channel functionality will be implemented here");
+  const handleAddChannel = (channelName: string, commission: string, paymentType: string) => {
+    // Add new channel to the list
+    setBookingChannels(prev => [...prev, channelName]);
+    
+    // Update rates data to include the new channel for all room types
+    setRatesData(prev => {
+      const updated = { ...prev };
+      Object.keys(updated).forEach(roomType => {
+        updated[roomType][channelName] = updated[roomType]["Walk-in"]; // Use Walk-in rate as default
+      });
+      return updated;
+    });
   };
 
-  const handleEditChannel = (channel: string) => {
-    setEditingChannel(channel);
-    toast.success(`Now editing ${channel}`);
+  const handleEditChannel = (oldChannel: string, newChannel: string) => {
+    if (oldChannel === newChannel) return; // No change
+    
+    // Update the channel name in the list
+    setBookingChannels(prev => 
+      prev.map(channel => channel === oldChannel ? newChannel : channel)
+    );
+    
+    // Update the rates data with the new channel name
+    setRatesData(prev => {
+      const updated = { ...prev };
+      Object.keys(updated).forEach(roomType => {
+        const rate = updated[roomType][oldChannel];
+        delete updated[roomType][oldChannel];
+        updated[roomType][newChannel] = rate;
+      });
+      return updated;
+    });
+  };
+
+  const handleDeleteChannel = (channel: string) => {
+    if (channel === "Walk-in") return; // Protect default channel
+    
+    // Remove the channel from the list
+    setBookingChannels(prev => 
+      prev.filter(c => c !== channel)
+    );
+    
+    // Remove the channel from rates data
+    setRatesData(prev => {
+      const updated = { ...prev };
+      Object.keys(updated).forEach(roomType => {
+        const { [channel]: removed, ...rest } = updated[roomType];
+        updated[roomType] = rest;
+      });
+      return updated;
+    });
   };
 
   return (
@@ -146,6 +189,7 @@ const RoomsSetupPage = () => {
           bookingChannels={bookingChannels}
           handleEditChannel={handleEditChannel}
           handleAddChannel={handleAddChannel}
+          handleDeleteChannel={handleDeleteChannel}
         />
         
         {/* Policies Section */}
