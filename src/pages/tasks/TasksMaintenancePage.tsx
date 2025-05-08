@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
-  Wrench, Clock, AlertTriangle, Tool, Plus,
+  Wrench, Clock, AlertTriangle, File, Plus,
   CalendarDays, ClipboardList, FileText, CheckCircle,
   RepeatIcon, Image
 } from "lucide-react";
@@ -248,7 +247,7 @@ const TasksMaintenancePage = () => {
                             <div className="mt-2 flex flex-wrap gap-1">
                               {task.toolsRequired.map((tool, index) => (
                                 <Badge key={index} variant="outline" className="bg-gray-800">
-                                  <Tool className="h-3 w-3 mr-1" />
+                                  <File className="h-3 w-3 mr-1" />
                                   {tool}
                                 </Badge>
                               ))}

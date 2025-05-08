@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { 
   Dialog, DialogContent, DialogDescription, DialogFooter, 
   DialogHeader, DialogTitle, DialogTrigger 
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import {
   Users, Settings, ClipboardCheck, BookOpen, Wrench, 
-  Bed, Car, Plus, Trash2, Edit, CheckCircle
+  Bed, Car, Plus, Trash2, Edit, CheckCircle, Clock
 } from "lucide-react";
 import { toast } from "sonner";
 

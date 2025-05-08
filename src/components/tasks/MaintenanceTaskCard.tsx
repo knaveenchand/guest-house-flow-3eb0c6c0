@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { 
   Check, Clock, Wrench, AlertTriangle, 
-  Tool, Image, ArrowRight, CheckCircle
+  File, Image, ArrowRight, CheckCircle
 } from "lucide-react";
 
 interface MaintenanceTaskCardProps {
@@ -72,7 +72,7 @@ export function MaintenanceTaskCard({ task }: MaintenanceTaskCardProps) {
               
               {task.toolsRequired && task.toolsRequired.length > 0 && (
                 <div className="flex items-center gap-1">
-                  <Tool className="h-4 w-4 text-muted-foreground" />
+                  <File className="h-4 w-4 text-muted-foreground" />
                   <span>Tools: {task.toolsRequired.join(', ')}</span>
                 </div>
               )}

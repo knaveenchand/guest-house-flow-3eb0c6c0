@@ -1,4 +1,3 @@
-
 export interface Category {
   id: number;
   name: string;
@@ -76,7 +75,7 @@ export interface HousekeepingTask extends Task {
   roomNumber: string;
   checkoutTime?: string;
   checkInTime?: string;
-  cleaningStatus?: "not-started" | "in-progress" | "cleaned" | "inspected";
+  cleaningStatus?: "not-started" | "in-progress" | "cleaned" | "inspected" | "needs-attention";
 }
 
 export interface MaintenanceTask extends Task {
