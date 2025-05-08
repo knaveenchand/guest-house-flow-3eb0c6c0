@@ -56,10 +56,6 @@ const POSSetupPage = () => {
             
             <Card>
               <CardContent className="pt-6">
-                <p className="mb-4">
-                  Add items for sale into the POS. Manage categories, modifiers, and ingredients with weight or units of measure for cost estimation and item price. Include visibility control for the Sales side.
-                </p>
-                
                 {/* Horizontal Toggle Group for Menu Sections */}
                 <div className="mb-6 overflow-x-auto pb-2">
                   <ToggleGroup 
@@ -328,3 +324,4 @@ const POSSetupPage = () => {
 };
 
 export default POSSetupPage;
+
