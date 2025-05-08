@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlusCircle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FormLabel } from "@/components/ui/form";
+import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Category } from '@/types/posTypes';
 
@@ -54,7 +54,7 @@ const AddMenuItemForm: React.FC<AddMenuItemFormProps> = ({
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <FormLabel htmlFor="itemName">Item Name</FormLabel>
+            <Label htmlFor="itemName">Item Name</Label>
             <Input 
               id="itemName" 
               placeholder="Enter item name" 
@@ -64,7 +64,7 @@ const AddMenuItemForm: React.FC<AddMenuItemFormProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <FormLabel htmlFor="itemPrice">Price</FormLabel>
+            <Label htmlFor="itemPrice">Price</Label>
             <Input 
               id="itemPrice" 
               type="price"
@@ -84,7 +84,7 @@ const AddMenuItemForm: React.FC<AddMenuItemFormProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <FormLabel htmlFor="itemCategory">Category</FormLabel>
+            <Label htmlFor="itemCategory">Category</Label>
             <Select value={categoryId} onValueChange={setCategoryId}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select category" />
@@ -99,7 +99,7 @@ const AddMenuItemForm: React.FC<AddMenuItemFormProps> = ({
             </Select>
           </div>
           <div className="space-y-2">
-            <FormLabel htmlFor="itemDescription">Description (Optional)</FormLabel>
+            <Label htmlFor="itemDescription">Description (Optional)</Label>
             <Input 
               id="itemDescription" 
               placeholder="Enter item description" 

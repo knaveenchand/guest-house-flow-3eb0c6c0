@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlusCircle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
+import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface AddCategoryFormProps {
@@ -49,7 +48,7 @@ const AddCategoryForm: React.FC<AddCategoryFormProps> = ({
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <FormLabel htmlFor="name">Category Name</FormLabel>
+            <Label htmlFor="name">Category Name</Label>
             <Input 
               id="name" 
               placeholder="Enter category name" 
@@ -59,7 +58,7 @@ const AddCategoryForm: React.FC<AddCategoryFormProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <FormLabel htmlFor="color">Color</FormLabel>
+            <Label htmlFor="color">Color</Label>
             <Select value={color} onValueChange={setColor}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select color" />
@@ -74,7 +73,7 @@ const AddCategoryForm: React.FC<AddCategoryFormProps> = ({
             </Select>
           </div>
           <div className="space-y-2">
-            <FormLabel htmlFor="icon">Icon</FormLabel>
+            <Label htmlFor="icon">Icon</Label>
             <Select value={icon} onValueChange={setIcon}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select icon" />

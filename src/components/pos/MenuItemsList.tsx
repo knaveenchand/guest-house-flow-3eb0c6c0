@@ -2,7 +2,7 @@
 import React from 'react';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Eye } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { MenuItem } from "@/types/posTypes";
 
