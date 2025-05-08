@@ -26,6 +26,7 @@ import POSSetupPage from "./pages/pos/POSSetupPage";
 
 import TasksHousekeepingPage from "./pages/tasks/TasksHousekeepingPage";
 import TasksMaintenancePage from "./pages/tasks/TasksMaintenancePage";
+import TasksCarPage from "./pages/tasks/TasksCarPage";
 import TasksSetupPage from "./pages/tasks/TasksSetupPage";
 
 import FinancesReportsPage from "./pages/finances/FinancesReportsPage";
@@ -65,6 +66,7 @@ const App = () => (
           <Route path="/tasks" element={<TasksPage />} />
           <Route path="/tasks/housekeeping" element={<TasksHousekeepingPage />} />
           <Route path="/tasks/maintenance" element={<TasksMaintenancePage />} />
+          <Route path="/tasks/car" element={<TasksCarPage />} />
           <Route path="/tasks/setup" element={<TasksSetupPage />} />
           
           {/* Finances module */}
