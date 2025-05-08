@@ -11,17 +11,28 @@ interface MenuItemsListProps {
   categories: { id: number; name: string }[];
   onDeleteItem: (id: number) => void;
   onEditItem?: (item: MenuItem) => void;
+  onToggleVisibility?: (id: number, visible: boolean) => void;
 }
 
 const MenuItemsList: React.FC<MenuItemsListProps> = ({
   items,
   categories,
   onDeleteItem,
-  onEditItem
+  onEditItem,
+  onToggleVisibility
 }) => {
   const getCategoryName = (categoryId: number) => {
     const category = categories.find(c => c.id === categoryId);
     return category ? category.name : "Unknown";
+  };
+
+  // Calculate margin if it's not already provided
+  const calculateMargin = (item: MenuItem) => {
+    if (item.margin !== undefined) return item.margin;
+    if (item.cost && item.price) {
+      return ((item.price - item.cost) / item.price) * 100;
+    }
+    return null;
   };
 
   return (
@@ -29,8 +40,11 @@ const MenuItemsList: React.FC<MenuItemsListProps> = ({
       <TableHeader>
         <TableRow>
           <TableHead>Name</TableHead>
-          <TableHead>Price</TableHead>
           <TableHead>Category</TableHead>
+          <TableHead>Cost</TableHead>
+          <TableHead>Margin</TableHead>
+          <TableHead>Price</TableHead>
+          <TableHead>Inventory</TableHead>
           <TableHead>Visible</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
@@ -39,10 +53,19 @@ const MenuItemsList: React.FC<MenuItemsListProps> = ({
         {items.map((item) => (
           <TableRow key={item.id}>
             <TableCell className="font-medium">{item.name}</TableCell>
-            <TableCell>${item.price.toFixed(2)}</TableCell>
             <TableCell>{getCategoryName(item.categoryId)}</TableCell>
+            <TableCell>${item.cost?.toFixed(2) || "-"}</TableCell>
             <TableCell>
-              <Switch id={`visible-item-${item.id}`} defaultChecked />
+              {calculateMargin(item) !== null ? `${calculateMargin(item)?.toFixed(1)}%` : "-"}
+            </TableCell>
+            <TableCell>${item.price.toFixed(2)}</TableCell>
+            <TableCell>{item.inventory !== undefined ? item.inventory : "-"}</TableCell>
+            <TableCell>
+              <Switch 
+                id={`visible-item-${item.id}`} 
+                checked={item.visible !== false} 
+                onCheckedChange={(checked) => onToggleVisibility && onToggleVisibility(item.id, checked)}
+              />
             </TableCell>
             <TableCell>
               <div className="flex items-center gap-2">
