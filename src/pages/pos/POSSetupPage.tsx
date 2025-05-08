@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -10,17 +11,33 @@ import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Category, MenuItem } from "@/types/posTypes";
+import CategoryTable from "@/components/pos/CategoryTable";
+import AddCategoryForm from "@/components/pos/AddCategoryForm";
+import MenuItemsList from "@/components/pos/MenuItemsList";
+import AddMenuItemForm from "@/components/pos/AddMenuItemForm";
+import { toast } from "sonner";
 
 const POSSetupPage = () => {
   const [activeTab, setActiveTab] = useState("tables");
   const [activeMenuSection, setActiveMenuSection] = useState("categories");
   
   // Sample category data with colors and icons
-  const categories = [
-    { id: 1, name: "Breakfast", color: "#22c55e", icon: "Coffee", items: 15 },
-    { id: 2, name: "Lunch", color: "#f97316", icon: "Pizza", items: 22 },
-    { id: 3, name: "Drinks", color: "#0ea5e9", icon: "Beer", items: 18 }
-  ];
+  const [categories, setCategories] = useState<Category[]>([
+    { id: 1, name: "Breakfast", color: "#22c55e", icon: "Coffee", items: 2 },
+    { id: 2, name: "Lunch", color: "#f97316", icon: "Pizza", items: 3 },
+    { id: 3, name: "Drinks", color: "#0ea5e9", icon: "Beer", items: 1 }
+  ]);
+  
+  // Sample menu items
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([
+    { id: 1, name: "Eggs Benedict", price: 12.99, categoryId: 1, description: "Poached eggs on English muffin" },
+    { id: 2, name: "Pancakes", price: 9.99, categoryId: 1 },
+    { id: 3, name: "Burger", price: 15.99, categoryId: 2 },
+    { id: 4, name: "Caesar Salad", price: 10.99, categoryId: 2 },
+    { id: 5, name: "Pizza Margherita", price: 14.99, categoryId: 2 },
+    { id: 6, name: "Cold Brew", price: 4.99, categoryId: 3 }
+  ]);
   
   // Available colors for selector
   const colorOptions = [
@@ -40,6 +57,77 @@ const POSSetupPage = () => {
     { value: "Wheat", label: "Wheat" },
     { value: "Clock", label: "Clock" }
   ];
+
+  // Function to add a new category
+  const handleAddCategory = (name: string, color: string, icon: string) => {
+    const newId = categories.length > 0 ? Math.max(...categories.map(c => c.id)) + 1 : 1;
+    const newCategory = {
+      id: newId,
+      name,
+      color,
+      icon,
+      items: 0
+    };
+    setCategories([...categories, newCategory]);
+    toast.success(`Category "${name}" added successfully`);
+  };
+
+  // Function to delete a category
+  const handleDeleteCategory = (id: number) => {
+    const categoryToDelete = categories.find(c => c.id === id);
+    // Check if category has items
+    const itemsInCategory = menuItems.filter(item => item.categoryId === id);
+    
+    if (itemsInCategory.length > 0) {
+      toast.error(`Cannot delete category "${categoryToDelete?.name}". It contains ${itemsInCategory.length} items.`);
+      return;
+    }
+    
+    setCategories(categories.filter(c => c.id !== id));
+    toast.success(`Category "${categoryToDelete?.name}" deleted`);
+  };
+
+  // Function to update a category
+  const handleUpdateCategory = (updatedCategory: Category) => {
+    setCategories(categories.map(c => 
+      c.id === updatedCategory.id ? updatedCategory : c
+    ));
+  };
+
+  // Function to add a new menu item
+  const handleAddMenuItem = (name: string, price: number, categoryId: number, description?: string) => {
+    const newId = menuItems.length > 0 ? Math.max(...menuItems.map(item => item.id)) + 1 : 1;
+    const newItem = {
+      id: newId,
+      name,
+      price,
+      categoryId,
+      description
+    };
+    setMenuItems([...menuItems, newItem]);
+    
+    // Update the item count for the category
+    setCategories(categories.map(cat => 
+      cat.id === categoryId ? { ...cat, items: cat.items + 1 } : cat
+    ));
+    
+    toast.success(`Menu item "${name}" added successfully`);
+  };
+
+  // Function to delete a menu item
+  const handleDeleteMenuItem = (id: number) => {
+    const itemToDelete = menuItems.find(item => item.id === id);
+    if (itemToDelete) {
+      setMenuItems(menuItems.filter(item => item.id !== id));
+      
+      // Update the item count for the category
+      setCategories(categories.map(cat => 
+        cat.id === itemToDelete.categoryId ? { ...cat, items: cat.items - 1 } : cat
+      ));
+      
+      toast.success(`Menu item "${itemToDelete.name}" deleted`);
+    }
+  };
 
   return (
     <Layout>
@@ -132,81 +220,23 @@ const POSSetupPage = () => {
                   <div className="p-4 border rounded-md bg-green-50">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="font-medium">Categories</h3>
-                      <Button size="sm" variant="outline">Add Category</Button>
                     </div>
                     
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Name</TableHead>
-                          <TableHead>Color</TableHead>
-                          <TableHead>Icon</TableHead>
-                          <TableHead>Items</TableHead>
-                          <TableHead>Visible</TableHead>
-                          <TableHead>Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {categories.map((category) => (
-                          <TableRow key={category.id}>
-                            <TableCell className="font-medium">{category.name}</TableCell>
-                            <TableCell>
-                              <div className="flex items-center gap-2">
-                                <Circle className="h-4 w-4" fill={category.color} color={category.color} />
-                                <Select defaultValue={category.color}>
-                                  <SelectTrigger className="w-[100px]">
-                                    <SelectValue placeholder="Color" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {colorOptions.map((color) => (
-                                      <SelectItem key={color.value} value={color.value}>
-                                        <div className="flex items-center gap-2">
-                                          <Circle className="h-3 w-3" fill={color.value} color={color.value} />
-                                          <span>{color.label}</span>
-                                        </div>
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <Select defaultValue={category.icon}>
-                                <SelectTrigger className="w-[100px]">
-                                  <SelectValue placeholder="Icon" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {iconOptions.map((icon) => (
-                                    <SelectItem key={icon.value} value={icon.value}>
-                                      {icon.label}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </TableCell>
-                            <TableCell>{category.items}</TableCell>
-                            <TableCell>
-                              <Switch id={`visible-${category.id}`} defaultChecked />
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center gap-2">
-                                <Button size="sm" variant="ghost">
-                                  <Edit className="h-4 w-4" />
-                                </Button>
-                                <Button size="sm" variant="ghost">
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                    <CategoryTable 
+                      categories={categories}
+                      colorOptions={colorOptions}
+                      iconOptions={iconOptions}
+                      onDeleteCategory={handleDeleteCategory}
+                      onUpdateCategory={handleUpdateCategory}
+                    />
                     
-                    <Button className="mt-4 w-full" variant="outline">
-                      <PlusCircle className="h-4 w-4 mr-2" />
-                      Add New Category
-                    </Button>
+                    <div className="mt-4">
+                      <AddCategoryForm 
+                        colorOptions={colorOptions}
+                        iconOptions={iconOptions}
+                        onAddCategory={handleAddCategory}
+                      />
+                    </div>
                   </div>
                 )}
 
@@ -214,13 +244,19 @@ const POSSetupPage = () => {
                   <div className="p-4 border rounded-md">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="font-medium">Items</h3>
-                      <Button size="sm" variant="outline">Add Item</Button>
                     </div>
-                    <p className="text-sm text-muted-foreground">Manage individual menu items with pricing</p>
-                    <div className="mt-4 flex items-center space-x-2">
-                      <Eye className="h-4 w-4" />
-                      <span className="text-sm">Item Visibility</span>
-                      <Switch id="item-visibility" />
+                    
+                    <MenuItemsList 
+                      items={menuItems}
+                      categories={categories.map(c => ({ id: c.id, name: c.name }))}
+                      onDeleteItem={handleDeleteMenuItem}
+                    />
+                    
+                    <div className="mt-4">
+                      <AddMenuItemForm 
+                        categories={categories}
+                        onAddItem={handleAddMenuItem}
+                      />
                     </div>
                   </div>
                 )}

@@ -1,11 +1,12 @@
+
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
 const Table = React.forwardRef<
   HTMLTableElement,
-  React.HTMLAttributes<HTMLTableElement>
->(({ className, ...props }, ref) => (
+  React.HTMLAttributes<HTMLTableElement> & { striped?: boolean }
+>(({ className, striped, ...props }, ref) => (
   <div className="relative w-full overflow-auto">
     <table
       ref={ref}
@@ -26,11 +27,15 @@ TableHeader.displayName = "TableHeader"
 
 const TableBody = React.forwardRef<
   HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
+  React.HTMLAttributes<HTMLTableSectionElement> & { striped?: boolean }
+>(({ className, striped, ...props }, ref) => (
   <tbody
     ref={ref}
-    className={cn("[&_tr:last-child]:border-0", className)}
+    className={cn(
+      "[&_tr:last-child]:border-0",
+      striped && "[&_tr:nth-child(odd)]:bg-muted/50",
+      className
+    )}
     {...props}
   />
 ))
@@ -68,12 +73,13 @@ TableRow.displayName = "TableRow"
 
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
-  React.ThHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
+  React.ThHTMLAttributes<HTMLTableCellElement> & { sortable?: boolean }
+>(({ className, sortable, ...props }, ref) => (
   <th
     ref={ref}
     className={cn(
       "h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+      sortable && "cursor-pointer hover:text-foreground",
       className
     )}
     {...props}
