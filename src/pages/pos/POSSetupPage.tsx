@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -43,15 +44,6 @@ const POSSetupPage = () => {
           </TabsContent>
           
           <TabsContent value="menu" className="space-y-4 mt-4">
-            <div className="flex justify-end">
-              <Link to="/pos/menu">
-                <Button>
-                  <Menu className="mr-2 h-4 w-4" />
-                  Manage Menu
-                </Button>
-              </Link>
-            </div>
-            
             <Card>
               <CardContent className="pt-6">
                 {/* Horizontal Toggle Group for Menu Sections */}
@@ -115,7 +107,50 @@ const POSSetupPage = () => {
                       <h3 className="font-medium">Categories</h3>
                       <Button size="sm" variant="outline">Add Category</Button>
                     </div>
-                    <p className="text-sm text-muted-foreground">Organize menu items into categories</p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                      <div className="p-4 border rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Menu className="h-5 w-5 text-green-600" />
+                            <h4 className="font-medium">Breakfast</h4>
+                          </div>
+                          <Switch id="breakfast-visible" defaultChecked />
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-2">15 items</p>
+                      </div>
+
+                      <div className="p-4 border rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Menu className="h-5 w-5 text-orange-600" />
+                            <h4 className="font-medium">Lunch</h4>
+                          </div>
+                          <Switch id="lunch-visible" defaultChecked />
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-2">22 items</p>
+                      </div>
+
+                      <div className="p-4 border rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Menu className="h-5 w-5 text-blue-600" />
+                            <h4 className="font-medium">Drinks</h4>
+                          </div>
+                          <Switch id="drinks-visible" defaultChecked />
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-2">18 items</p>
+                      </div>
+
+                      <div className="p-4 border rounded-md hover:bg-gray-50 cursor-pointer transition-colors border-dashed">
+                        <div className="flex items-center justify-center h-full">
+                          <Button variant="ghost" className="flex flex-col items-center gap-2 h-auto py-4">
+                            <span className="text-xl">+</span>
+                            <span className="text-sm">Add New Category</span>
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
 
