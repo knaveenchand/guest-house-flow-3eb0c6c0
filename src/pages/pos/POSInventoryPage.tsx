@@ -2,7 +2,7 @@
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Package } from "lucide-react";
+import { Package, Plus, Clipboard, Receipt, Utensils } from "lucide-react";
 
 const POSInventoryPage = () => {
   return (
@@ -15,7 +15,25 @@ const POSInventoryPage = () => {
               Manage stock levels and inventory items
             </p>
           </div>
-          <Button>Add Inventory Item</Button>
+        </div>
+
+        <div className="flex flex-wrap gap-2 mb-4">
+          <Button variant="outline" className="flex items-center gap-2">
+            <Plus size={18} />
+            <span>Add Stock</span>
+          </Button>
+          <Button variant="outline" className="flex items-center gap-2">
+            <Clipboard size={18} />
+            <span>Check Stock</span>
+          </Button>
+          <Button variant="outline" className="flex items-center gap-2">
+            <Receipt size={18} />
+            <span>Bill Foto</span>
+          </Button>
+          <Button variant="outline" className="flex items-center gap-2">
+            <Utensils size={18} />
+            <span>Kitchen List</span>
+          </Button>
         </div>
 
         <Tabs defaultValue="current">

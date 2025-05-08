@@ -3,7 +3,7 @@ import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Table, Clock, Coffee, Beer, Pizza } from "lucide-react";
 
 const POSPage = () => {
   return (
@@ -17,6 +17,28 @@ const POSPage = () => {
             </p>
           </div>
           <Button>New Order</Button>
+        </div>
+
+        <div className="flex flex-wrap gap-2 mb-4 overflow-x-auto pb-2">
+          <Button variant="outline" className="flex items-center gap-2">
+            <Table size={18} />
+            <span>Tables</span>
+          </Button>
+          <Button variant="outline" className="flex items-center gap-2">
+            <span>Page</span>
+          </Button>
+          <Button variant="outline" className="flex items-center gap-2">
+            <Clock size={18} />
+            <span>Time</span>
+          </Button>
+          <Button variant="outline" className="flex items-center gap-2">
+            <Pizza size={18} />
+            <span>Mains</span>
+          </Button>
+          <Button variant="outline" className="flex items-center gap-2">
+            <Beer size={18} />
+            <span>Drinks</span>
+          </Button>
         </div>
 
         <Tabs defaultValue="menu">

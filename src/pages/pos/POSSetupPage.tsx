@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -11,7 +12,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
+import { Settings, Menu } from "lucide-react";
 
 const POSSetupPage = () => {
   const [activeTab, setActiveTab] = useState("tables");
@@ -29,9 +30,9 @@ const POSSetupPage = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="w-full justify-start">
+          <TabsList className="w-full justify-start overflow-x-auto">
             <TabsTrigger value="tables">Tables</TabsTrigger>
-            <TabsTrigger value="menu-items">Menu Items</TabsTrigger>
+            <TabsTrigger value="menu">Menu Items</TabsTrigger>
             <TabsTrigger value="modifiers">Modifiers</TabsTrigger>
             <TabsTrigger value="user-profiles">User Profiles</TabsTrigger>
             <TabsTrigger value="general-settings">General Settings</TabsTrigger>
@@ -55,9 +56,17 @@ const POSSetupPage = () => {
             {/* Tables management content */}
           </TabsContent>
           
-          <TabsContent value="menu-items" className="space-y-4 mt-4">
+          <TabsContent value="menu" className="space-y-4 mt-4">
             {/* Menu items content */}
-            <h2 className="text-xl font-semibold">Menu Items</h2>
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold">Menu Items</h2>
+              <Link to="/pos/menu">
+                <Button>
+                  <Menu className="mr-2 h-4 w-4" />
+                  Manage Menu
+                </Button>
+              </Link>
+            </div>
             <p className="text-muted-foreground">
               Manage your menu categories and items.
             </p>
