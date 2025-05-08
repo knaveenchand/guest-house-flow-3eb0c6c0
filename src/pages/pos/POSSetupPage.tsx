@@ -40,11 +40,11 @@ const POSSetupPage = () => {
     { id: 6, name: "Cold Brew", price: 4.99, categoryId: 3 }
   ]);
   
-  // Sample ingredients data
+  // Sample ingredients data - updated to match new structure
   const [ingredients, setIngredients] = useState<Ingredient[]>([
-    { id: 1, name: "Flour", unitOfMeasure: "kg", cost: 1.20, quantity: 0, inStock: 5.0 },
-    { id: 2, name: "Eggs", unitOfMeasure: "pc", cost: 0.25, quantity: 0, inStock: 24 },
-    { id: 3, name: "Milk", unitOfMeasure: "l", cost: 2.50, quantity: 0, inStock: 3.5 }
+    { id: 1, name: "Flour", unitOfMeasure: "g", cost: 4.50, quantity: 0, unitsPerPackage: 1000 },
+    { id: 2, name: "Eggs", unitOfMeasure: "pc", cost: 3.00, quantity: 0, unitsPerPackage: 12 },
+    { id: 3, name: "Milk", unitOfMeasure: "ml", cost: 3.25, quantity: 0, unitsPerPackage: 1000 }
   ]);
   
   // Available colors for selector
@@ -164,8 +164,8 @@ const POSSetupPage = () => {
     ));
   };
 
-  // Function to add a new ingredient
-  const handleAddIngredient = (name: string, unitOfMeasure: string, cost: number, inStock: number) => {
+  // Function to add a new ingredient - updated to match new structure
+  const handleAddIngredient = (name: string, unitOfMeasure: string, cost: number, unitsPerPackage?: number) => {
     const newId = ingredients.length > 0 ? Math.max(...ingredients.map(ing => ing.id)) + 1 : 1;
     const newIngredient = {
       id: newId,
@@ -173,7 +173,7 @@ const POSSetupPage = () => {
       unitOfMeasure,
       cost,
       quantity: 0,
-      inStock
+      unitsPerPackage
     };
     setIngredients([...ingredients, newIngredient]);
   };

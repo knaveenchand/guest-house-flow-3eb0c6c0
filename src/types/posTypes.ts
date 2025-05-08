@@ -27,5 +27,5 @@ export interface Ingredient {
   unitOfMeasure: string;
   cost: number;
   quantity: number;
-  inStock: number;
+  unitsPerPackage?: number; // New field for units per package
 }

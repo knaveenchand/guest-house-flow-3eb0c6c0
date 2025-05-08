@@ -14,7 +14,7 @@ interface IngredientsTableProps {
   ingredients: Ingredient[];
   onDeleteIngredient: (id: number) => void;
   onUpdateIngredient: (ingredient: Ingredient) => void;
-  onAddIngredient: (name: string, unitOfMeasure: string, cost: number, inStock: number) => void;
+  onAddIngredient: (name: string, unitOfMeasure: string, cost: number, unitsPerPackage?: number) => void;
 }
 
 const IngredientsTable: React.FC<IngredientsTableProps> = ({
@@ -27,7 +27,7 @@ const IngredientsTable: React.FC<IngredientsTableProps> = ({
   const [newName, setNewName] = useState("");
   const [newUnitOfMeasure, setNewUnitOfMeasure] = useState("g");
   const [newCost, setNewCost] = useState("");
-  const [newInStock, setNewInStock] = useState("");
+  const [newUnitsPerPackage, setNewUnitsPerPackage] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,12 +36,12 @@ const IngredientsTable: React.FC<IngredientsTableProps> = ({
         newName.trim(),
         newUnitOfMeasure,
         parseFloat(newCost),
-        parseFloat(newInStock) || 0
+        newUnitsPerPackage ? parseFloat(newUnitsPerPackage) : undefined
       );
       setNewName("");
       setNewUnitOfMeasure("g");
       setNewCost("");
-      setNewInStock("");
+      setNewUnitsPerPackage("");
       setIsAddDialogOpen(false);
       toast.success("Ingredient added successfully");
     }
@@ -101,7 +101,7 @@ const IngredientsTable: React.FC<IngredientsTableProps> = ({
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="cost">Cost per Unit</Label>
+                <Label htmlFor="cost">Cost per Package</Label>
                 <Input 
                   id="cost" 
                   type="price"
@@ -121,11 +121,11 @@ const IngredientsTable: React.FC<IngredientsTableProps> = ({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="inStock">Current Stock</Label>
+                <Label htmlFor="unitsPerPackage">Units per Package</Label>
                 <Input 
-                  id="inStock" 
-                  placeholder="0" 
-                  value={newInStock}
+                  id="unitsPerPackage" 
+                  placeholder="e.g., 500 for a 500g bag" 
+                  value={newUnitsPerPackage}
                   onChange={(e) => {
                     // Allow only numbers and decimal point
                     const value = e.target.value.replace(/[^\d.]/g, '');
@@ -134,7 +134,7 @@ const IngredientsTable: React.FC<IngredientsTableProps> = ({
                     const formattedValue = parts.length > 2 
                       ? `${parts[0]}.${parts.slice(1).join('')}`
                       : value;
-                    setNewInStock(formattedValue);
+                    setNewUnitsPerPackage(formattedValue);
                   }}
                 />
               </div>
@@ -156,8 +156,8 @@ const IngredientsTable: React.FC<IngredientsTableProps> = ({
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead>Unit</TableHead>
-            <TableHead>Cost per Unit</TableHead>
-            <TableHead>In Stock</TableHead>
+            <TableHead>Cost per Package</TableHead>
+            <TableHead>Units per Package</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -174,7 +174,11 @@ const IngredientsTable: React.FC<IngredientsTableProps> = ({
                 <TableCell className="font-medium">{ingredient.name}</TableCell>
                 <TableCell>{ingredient.unitOfMeasure}</TableCell>
                 <TableCell>${ingredient.cost.toFixed(2)}</TableCell>
-                <TableCell>{ingredient.inStock} {ingredient.unitOfMeasure}</TableCell>
+                <TableCell>
+                  {ingredient.unitsPerPackage ? 
+                    `${ingredient.unitsPerPackage} ${ingredient.unitOfMeasure}` : 
+                    "Not specified"}
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <Button 

@@ -40,7 +40,10 @@ const EditMenuItemForm: React.FC<EditMenuItemFormProps> = ({
   // Calculate total cost based on ingredients
   const calculateTotalCost = () => {
     return selectedIngredients.reduce((total, item) => {
-      return total + (item.ingredient.cost * item.quantity);
+      const unitCost = item.ingredient.unitsPerPackage 
+        ? item.ingredient.cost / item.ingredient.unitsPerPackage 
+        : item.ingredient.cost;
+      return total + (unitCost * item.quantity);
     }, 0);
   };
 
@@ -119,7 +122,7 @@ const EditMenuItemForm: React.FC<EditMenuItemFormProps> = ({
         unitOfMeasure: sel.ingredient.unitOfMeasure,
         cost: sel.ingredient.cost,
         quantity: sel.quantity,
-        inStock: sel.ingredient.inStock
+        unitsPerPackage: sel.ingredient.unitsPerPackage
       }));
       
       onUpdateItem({
@@ -136,6 +139,20 @@ const EditMenuItemForm: React.FC<EditMenuItemFormProps> = ({
       setOpen(false);
       toast.success(`Menu item "${name}" updated successfully`);
     }
+  };
+
+  // Calculate cost per unit for display
+  const getCostPerUnit = (ingredient: Ingredient) => {
+    if (ingredient.unitsPerPackage && ingredient.unitsPerPackage > 0) {
+      return ingredient.cost / ingredient.unitsPerPackage;
+    }
+    return ingredient.cost;
+  };
+
+  // Calculate ingredient cost for the recipe
+  const calculateIngredientCost = (ingredient: Ingredient, quantity: number) => {
+    const unitCost = getCostPerUnit(ingredient);
+    return unitCost * quantity;
   };
 
   return (
@@ -192,11 +209,14 @@ const EditMenuItemForm: React.FC<EditMenuItemFormProps> = ({
                     <SelectValue placeholder="Select ingredient" />
                   </SelectTrigger>
                   <SelectContent>
-                    {ingredients.map((ingredient) => (
-                      <SelectItem key={ingredient.id} value={ingredient.id.toString()}>
-                        {ingredient.name} (${ingredient.cost.toFixed(2)} per {ingredient.unitOfMeasure})
-                      </SelectItem>
-                    ))}
+                    {ingredients.map((ingredient) => {
+                      const costPerUnit = getCostPerUnit(ingredient);
+                      return (
+                        <SelectItem key={ingredient.id} value={ingredient.id.toString()}>
+                          {ingredient.name} (${costPerUnit.toFixed(2)} per {ingredient.unitOfMeasure})
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
               </div>
@@ -242,7 +262,7 @@ const EditMenuItemForm: React.FC<EditMenuItemFormProps> = ({
                     <TableRow key={item.id}>
                       <TableCell>{item.ingredient.name}</TableCell>
                       <TableCell>{item.quantity} {item.ingredient.unitOfMeasure}</TableCell>
-                      <TableCell>${(item.ingredient.cost * item.quantity).toFixed(2)}</TableCell>
+                      <TableCell>${calculateIngredientCost(item.ingredient, item.quantity).toFixed(2)}</TableCell>
                       <TableCell>
                         <Button 
                           size="sm" 
