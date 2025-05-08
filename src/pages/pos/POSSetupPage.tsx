@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -10,12 +11,13 @@ import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Category, MenuItem, Ingredient } from "@/types/posTypes";
+import { Category, MenuItem, Ingredient, Modifier } from "@/types/posTypes";
 import CategoryTable from "@/components/pos/CategoryTable";
 import AddCategoryForm from "@/components/pos/AddCategoryForm";
 import MenuItemsList from "@/components/pos/MenuItemsList";
 import AddMenuItemForm from "@/components/pos/AddMenuItemForm";
 import IngredientsTable from "@/components/pos/IngredientsTable";
+import ModifiersTable from "@/components/pos/ModifiersTable"; // Import the new component
 import { toast } from "sonner";
 import EditMenuItemForm from "@/components/pos/EditMenuItemForm";
 
@@ -40,11 +42,18 @@ const POSSetupPage = () => {
     { id: 6, name: "Cold Brew", price: 4.99, categoryId: 3 }
   ]);
   
-  // Sample ingredients data - updated to match new structure
+  // Sample ingredients data
   const [ingredients, setIngredients] = useState<Ingredient[]>([
     { id: 1, name: "Flour", unitOfMeasure: "g", cost: 4.50, quantity: 0, unitsPerPackage: 1000 },
     { id: 2, name: "Eggs", unitOfMeasure: "pc", cost: 3.00, quantity: 0, unitsPerPackage: 12 },
     { id: 3, name: "Milk", unitOfMeasure: "ml", cost: 3.25, quantity: 0, unitsPerPackage: 1000 }
+  ]);
+  
+  // New modifiers state
+  const [modifiers, setModifiers] = useState<Modifier[]>([
+    { id: 1, name: "Extra Cheese", type: "addition", priceAdjustment: 1.50, description: "Add extra cheese" },
+    { id: 2, name: "No Onions", type: "removal", priceAdjustment: -0.50, description: "Remove onions" },
+    { id: 3, name: "Gluten-Free Bun", type: "substitution", priceAdjustment: 2.00, description: "Replace regular bun with gluten-free bun" }
   ]);
   
   // Available colors for selector
@@ -164,7 +173,7 @@ const POSSetupPage = () => {
     ));
   };
 
-  // Function to add a new ingredient - updated to match new structure
+  // Function to add a new ingredient
   const handleAddIngredient = (name: string, unitOfMeasure: string, cost: number, unitsPerPackage?: number) => {
     const newId = ingredients.length > 0 ? Math.max(...ingredients.map(ing => ing.id)) + 1 : 1;
     const newIngredient = {
@@ -192,6 +201,69 @@ const POSSetupPage = () => {
     setIngredients(ingredients.map(ing => 
       ing.id === updatedIngredient.id ? updatedIngredient : ing
     ));
+  };
+
+  // Function to add a new modifier
+  const handleAddModifier = (
+    name: string, 
+    type: "addition" | "removal" | "substitution", 
+    priceAdjustment: number,
+    description?: string
+  ) => {
+    const newId = modifiers.length > 0 ? Math.max(...modifiers.map(mod => mod.id)) + 1 : 1;
+    const newModifier = {
+      id: newId,
+      name,
+      type,
+      priceAdjustment,
+      description
+    };
+    setModifiers([...modifiers, newModifier]);
+  };
+
+  // Function to delete a modifier
+  const handleDeleteModifier = (id: number) => {
+    const modifierToDelete = modifiers.find(mod => mod.id === id);
+    if (modifierToDelete) {
+      // Check if modifier is used in any menu items
+      const itemsUsingModifier = menuItems.filter(item => 
+        item.modifiers?.some(m => m.modifierId === id)
+      );
+      
+      if (itemsUsingModifier.length > 0) {
+        toast.error(`Cannot delete modifier "${modifierToDelete.name}". It is used in ${itemsUsingModifier.length} menu items.`);
+        return;
+      }
+      
+      setModifiers(modifiers.filter(mod => mod.id !== id));
+      toast.success(`Modifier "${modifierToDelete.name}" deleted`);
+    }
+  };
+
+  // Function to update a modifier
+  const handleUpdateModifier = (updatedModifier: Modifier) => {
+    setModifiers(modifiers.map(mod => 
+      mod.id === updatedModifier.id ? updatedModifier : mod
+    ));
+    
+    // Update modifier in menu items if it's used
+    setMenuItems(menuItems.map(item => {
+      if (item.modifiers && item.modifiers.some(m => m.modifierId === updatedModifier.id)) {
+        return {
+          ...item,
+          modifiers: item.modifiers.map(m => 
+            m.modifierId === updatedModifier.id ? {
+              ...m,
+              name: updatedModifier.name,
+              type: updatedModifier.type,
+              priceAdjustment: updatedModifier.priceAdjustment,
+              description: updatedModifier.description
+            } : m
+          )
+        };
+      }
+      return item;
+    }));
   };
 
   return (
@@ -330,11 +402,12 @@ const POSSetupPage = () => {
 
                 {activeMenuSection === "modifiers" && (
                   <div className="p-4 border rounded-md">
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="font-medium">Modifiers</h3>
-                      <Button size="sm" variant="outline">Add Modifier</Button>
-                    </div>
-                    <p className="text-sm text-muted-foreground">Add options that modify menu items</p>
+                    <ModifiersTable
+                      modifiers={modifiers}
+                      onAddModifier={handleAddModifier}
+                      onDeleteModifier={handleDeleteModifier}
+                      onUpdateModifier={handleUpdateModifier}
+                    />
                   </div>
                 )}
 
@@ -521,6 +594,7 @@ const POSSetupPage = () => {
           item={editingItem}
           categories={categories}
           ingredients={ingredients}
+          modifiers={modifiers}
           onUpdateItem={handleUpdateMenuItem}
         />
       )}

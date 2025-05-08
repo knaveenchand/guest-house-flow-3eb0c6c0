@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Category } from '@/types/posTypes';
+import { toast } from "sonner";
 
 interface AddMenuItemFormProps {
   categories: Category[];
@@ -37,6 +38,7 @@ const AddMenuItemForm: React.FC<AddMenuItemFormProps> = ({
       setCategoryId(categories.length > 0 ? categories[0].id.toString() : "");
       setDescription("");
       setOpen(false);
+      toast.success(`Menu item "${name}" added successfully`);
     }
   };
 

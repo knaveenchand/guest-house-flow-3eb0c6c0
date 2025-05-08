@@ -18,7 +18,8 @@ export interface MenuItem {
   description?: string;
   image?: string;
   visible?: boolean;
-  ingredients?: Ingredient[]; // Add this new field for ingredients
+  ingredients?: Ingredient[]; 
+  modifiers?: MenuItemModifier[]; // Add modifiers to menu items
 }
 
 export interface Ingredient {
@@ -27,5 +28,24 @@ export interface Ingredient {
   unitOfMeasure: string;
   cost: number;
   quantity: number;
-  unitsPerPackage?: number; // New field for units per package
+  unitsPerPackage?: number;
+}
+
+export interface Modifier {
+  id: number;
+  name: string;
+  type: "addition" | "removal" | "substitution";
+  priceAdjustment: number;
+  isDefault?: boolean;
+  description?: string;
+}
+
+export interface MenuItemModifier {
+  id: number;
+  modifierId: number;
+  name: string;
+  type: "addition" | "removal" | "substitution";
+  priceAdjustment: number;
+  isDefault?: boolean;
+  description?: string;
 }
