@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Menu, Clock, DollarSign, Printer, FileText, SlidersHorizontal, Wheat, Percent, ArrowLeft, Eye, Edit, Trash2, PlusCircle, Color, Circle } from "lucide-react";
+import { Menu, Clock, DollarSign, Printer, FileText, SlidersHorizontal, Wheat, Percent, ArrowLeft, Eye, Edit, Trash2, PlusCircle, Circle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
