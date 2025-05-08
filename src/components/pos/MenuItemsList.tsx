@@ -10,12 +10,14 @@ interface MenuItemsListProps {
   items: MenuItem[];
   categories: { id: number; name: string }[];
   onDeleteItem: (id: number) => void;
+  onEditItem?: (item: MenuItem) => void;
 }
 
 const MenuItemsList: React.FC<MenuItemsListProps> = ({
   items,
   categories,
-  onDeleteItem
+  onDeleteItem,
+  onEditItem
 }) => {
   const getCategoryName = (categoryId: number) => {
     const category = categories.find(c => c.id === categoryId);
@@ -44,7 +46,11 @@ const MenuItemsList: React.FC<MenuItemsListProps> = ({
             </TableCell>
             <TableCell>
               <div className="flex items-center gap-2">
-                <Button size="sm" variant="ghost">
+                <Button 
+                  size="sm" 
+                  variant="ghost"
+                  onClick={() => onEditItem && onEditItem(item)}
+                >
                   <Edit className="h-4 w-4" />
                 </Button>
                 <Button 
