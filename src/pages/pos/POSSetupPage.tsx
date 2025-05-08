@@ -4,15 +4,43 @@ import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Menu, Clock, DollarSign, Printer, FileText, SlidersHorizontal, Wheat, Percent, ArrowLeft, Eye } from "lucide-react";
+import { Menu, Clock, DollarSign, Printer, FileText, SlidersHorizontal, Wheat, Percent, ArrowLeft, Eye, Edit, Trash2, PlusCircle, Color, Circle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const POSSetupPage = () => {
   const [activeTab, setActiveTab] = useState("tables");
   const [activeMenuSection, setActiveMenuSection] = useState("categories");
+  
+  // Sample category data with colors and icons
+  const categories = [
+    { id: 1, name: "Breakfast", color: "#22c55e", icon: "Coffee", items: 15 },
+    { id: 2, name: "Lunch", color: "#f97316", icon: "Pizza", items: 22 },
+    { id: 3, name: "Drinks", color: "#0ea5e9", icon: "Beer", items: 18 }
+  ];
+  
+  // Available colors for selector
+  const colorOptions = [
+    { value: "#22c55e", label: "Green" },
+    { value: "#f97316", label: "Orange" },
+    { value: "#0ea5e9", label: "Blue" },
+    { value: "#8b5cf6", label: "Purple" },
+    { value: "#ec4899", label: "Pink" },
+    { value: "#ef4444", label: "Red" }
+  ];
+  
+  // Available icons for selector
+  const iconOptions = [
+    { value: "Coffee", label: "Coffee" },
+    { value: "Pizza", label: "Pizza" },
+    { value: "Beer", label: "Beer" },
+    { value: "Wheat", label: "Wheat" },
+    { value: "Clock", label: "Clock" }
+  ];
 
   return (
     <Layout>
@@ -102,55 +130,84 @@ const POSSetupPage = () => {
 
                 {/* Content based on selected section */}
                 {activeMenuSection === "categories" && (
-                  <div className="p-4 border rounded-md">
+                  <div className="p-4 border rounded-md bg-green-50">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="font-medium">Categories</h3>
                       <Button size="sm" variant="outline">Add Category</Button>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-                      <div className="p-4 border rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Menu className="h-5 w-5 text-green-600" />
-                            <h4 className="font-medium">Breakfast</h4>
-                          </div>
-                          <Switch id="breakfast-visible" defaultChecked />
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-2">15 items</p>
-                      </div>
-
-                      <div className="p-4 border rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Menu className="h-5 w-5 text-orange-600" />
-                            <h4 className="font-medium">Lunch</h4>
-                          </div>
-                          <Switch id="lunch-visible" defaultChecked />
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-2">22 items</p>
-                      </div>
-
-                      <div className="p-4 border rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Menu className="h-5 w-5 text-blue-600" />
-                            <h4 className="font-medium">Drinks</h4>
-                          </div>
-                          <Switch id="drinks-visible" defaultChecked />
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-2">18 items</p>
-                      </div>
-
-                      <div className="p-4 border rounded-md hover:bg-gray-50 cursor-pointer transition-colors border-dashed">
-                        <div className="flex items-center justify-center h-full">
-                          <Button variant="ghost" className="flex flex-col items-center gap-2 h-auto py-4">
-                            <span className="text-xl">+</span>
-                            <span className="text-sm">Add New Category</span>
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Color</TableHead>
+                          <TableHead>Icon</TableHead>
+                          <TableHead>Items</TableHead>
+                          <TableHead>Visible</TableHead>
+                          <TableHead>Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {categories.map((category) => (
+                          <TableRow key={category.id}>
+                            <TableCell className="font-medium">{category.name}</TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Circle className="h-4 w-4" fill={category.color} color={category.color} />
+                                <Select defaultValue={category.color}>
+                                  <SelectTrigger className="w-[100px]">
+                                    <SelectValue placeholder="Color" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {colorOptions.map((color) => (
+                                      <SelectItem key={color.value} value={color.value}>
+                                        <div className="flex items-center gap-2">
+                                          <Circle className="h-3 w-3" fill={color.value} color={color.value} />
+                                          <span>{color.label}</span>
+                                        </div>
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Select defaultValue={category.icon}>
+                                <SelectTrigger className="w-[100px]">
+                                  <SelectValue placeholder="Icon" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {iconOptions.map((icon) => (
+                                    <SelectItem key={icon.value} value={icon.value}>
+                                      {icon.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </TableCell>
+                            <TableCell>{category.items}</TableCell>
+                            <TableCell>
+                              <Switch id={`visible-${category.id}`} defaultChecked />
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Button size="sm" variant="ghost">
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button size="sm" variant="ghost">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    
+                    <Button className="mt-4 w-full" variant="outline">
+                      <PlusCircle className="h-4 w-4 mr-2" />
+                      Add New Category
+                    </Button>
                   </div>
                 )}
 
