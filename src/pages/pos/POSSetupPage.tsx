@@ -11,11 +11,12 @@ import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Category, MenuItem } from "@/types/posTypes";
+import { Category, MenuItem, Ingredient } from "@/types/posTypes";
 import CategoryTable from "@/components/pos/CategoryTable";
 import AddCategoryForm from "@/components/pos/AddCategoryForm";
 import MenuItemsList from "@/components/pos/MenuItemsList";
 import AddMenuItemForm from "@/components/pos/AddMenuItemForm";
+import IngredientsTable from "@/components/pos/IngredientsTable";
 import { toast } from "sonner";
 
 const POSSetupPage = () => {
@@ -37,6 +38,13 @@ const POSSetupPage = () => {
     { id: 4, name: "Caesar Salad", price: 10.99, categoryId: 2 },
     { id: 5, name: "Pizza Margherita", price: 14.99, categoryId: 2 },
     { id: 6, name: "Cold Brew", price: 4.99, categoryId: 3 }
+  ]);
+  
+  // Sample ingredients data
+  const [ingredients, setIngredients] = useState<Ingredient[]>([
+    { id: 1, name: "Flour", unitOfMeasure: "kg", cost: 1.20, quantity: 0, inStock: 5.0 },
+    { id: 2, name: "Eggs", unitOfMeasure: "pc", cost: 0.25, quantity: 0, inStock: 24 },
+    { id: 3, name: "Milk", unitOfMeasure: "l", cost: 2.50, quantity: 0, inStock: 3.5 }
   ]);
   
   // Available colors for selector
@@ -127,6 +135,46 @@ const POSSetupPage = () => {
       
       toast.success(`Menu item "${itemToDelete.name}" deleted`);
     }
+  };
+  
+  // Function to toggle item visibility
+  const handleToggleItemVisibility = (id: number, visible: boolean) => {
+    setMenuItems(menuItems.map(item => 
+      item.id === id ? { ...item, visible } : item
+    ));
+    
+    const itemName = menuItems.find(item => item.id === id)?.name;
+    toast.success(`${itemName} is now ${visible ? 'visible' : 'hidden'}`);
+  };
+
+  // Function to add a new ingredient
+  const handleAddIngredient = (name: string, unitOfMeasure: string, cost: number, inStock: number) => {
+    const newId = ingredients.length > 0 ? Math.max(...ingredients.map(ing => ing.id)) + 1 : 1;
+    const newIngredient = {
+      id: newId,
+      name,
+      unitOfMeasure,
+      cost,
+      quantity: 0,
+      inStock
+    };
+    setIngredients([...ingredients, newIngredient]);
+  };
+
+  // Function to delete an ingredient
+  const handleDeleteIngredient = (id: number) => {
+    const ingredientToDelete = ingredients.find(ing => ing.id === id);
+    if (ingredientToDelete) {
+      setIngredients(ingredients.filter(ing => ing.id !== id));
+      toast.success(`Ingredient "${ingredientToDelete.name}" deleted`);
+    }
+  };
+
+  // Function to update an ingredient
+  const handleUpdateIngredient = (updatedIngredient: Ingredient) => {
+    setIngredients(ingredients.map(ing => 
+      ing.id === updatedIngredient.id ? updatedIngredient : ing
+    ));
   };
 
   return (
@@ -250,6 +298,7 @@ const POSSetupPage = () => {
                       items={menuItems}
                       categories={categories.map(c => ({ id: c.id, name: c.name }))}
                       onDeleteItem={handleDeleteMenuItem}
+                      onToggleVisibility={handleToggleItemVisibility}
                     />
                     
                     <div className="mt-4">
@@ -273,11 +322,12 @@ const POSSetupPage = () => {
 
                 {activeMenuSection === "ingredients" && (
                   <div className="p-4 border rounded-md">
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="font-medium">Ingredients</h3>
-                      <Button size="sm" variant="outline">Add Ingredient</Button>
-                    </div>
-                    <p className="text-sm text-muted-foreground">Manage ingredients with units of measure for cost tracking</p>
+                    <IngredientsTable 
+                      ingredients={ingredients}
+                      onAddIngredient={handleAddIngredient}
+                      onDeleteIngredient={handleDeleteIngredient}
+                      onUpdateIngredient={handleUpdateIngredient}
+                    />
                   </div>
                 )}
 
