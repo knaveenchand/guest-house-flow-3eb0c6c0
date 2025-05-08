@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
@@ -34,7 +33,6 @@ const modules = [
     bgColor: "bg-green-950/40",
     borderColor: "border-green-500",
     subMenu: [
-      { title: "Tables", icon: MessageCircle, path: "/pos/tables" },
       { title: "Menu", icon: List, path: "/pos/menu" },
       { title: "Setup", icon: Cog, path: "/pos/setup" }
     ]
