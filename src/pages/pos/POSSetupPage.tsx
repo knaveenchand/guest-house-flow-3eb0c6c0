@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -44,8 +43,7 @@ const POSSetupPage = () => {
           </TabsContent>
           
           <TabsContent value="menu" className="space-y-4 mt-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">Menu Items</h2>
+            <div className="flex justify-end">
               <Link to="/pos/menu">
                 <Button>
                   <Menu className="mr-2 h-4 w-4" />
@@ -324,4 +322,3 @@ const POSSetupPage = () => {
 };
 
 export default POSSetupPage;
-
