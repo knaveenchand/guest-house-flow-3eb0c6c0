@@ -21,6 +21,7 @@ import AddBookingPage from "./pages/rooms/AddBookingPage";
 
 import POSTablesPage from "./pages/pos/POSTablesPage";
 import POSMenuPage from "./pages/pos/POSMenuPage";
+import POSInventoryPage from "./pages/pos/POSInventoryPage";
 import POSSetupPage from "./pages/pos/POSSetupPage";
 
 import TasksHousekeepingPage from "./pages/tasks/TasksHousekeepingPage";
@@ -57,6 +58,7 @@ const App = () => (
           <Route path="/pos" element={<POSPage />} />
           <Route path="/pos/tables" element={<POSTablesPage />} />
           <Route path="/pos/menu" element={<POSMenuPage />} />
+          <Route path="/pos/inventory" element={<POSInventoryPage />} />
           <Route path="/pos/setup" element={<POSSetupPage />} />
           
           {/* Tasks module */}

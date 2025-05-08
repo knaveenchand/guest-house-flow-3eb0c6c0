@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { 
   Hotel, Bed, Computer, ClipboardList, DollarSign, Tv, 
   Settings, Calendar, List, FileText, Cog, MessageCircle, Car, Wrench,
-  PlaneLanding, PlaneTakeoff, BedDouble, Clock, Plus
+  PlaneLanding, PlaneTakeoff, BedDouble, Clock, Plus, Package, ShoppingCart
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -33,8 +33,9 @@ const modules = [
     bgColor: "bg-green-950/40",
     borderColor: "border-green-500",
     subMenu: [
-      { title: "Menu", icon: List, path: "/pos/menu" },
-      { title: "Setup", icon: Cog, path: "/pos/setup" }
+      { title: "Sales", icon: ShoppingCart, path: "/pos" },
+      { title: "Inventory", icon: Package, path: "/pos/inventory" },
+      { title: "Settings", icon: Settings, path: "/pos/setup" }
     ]
   },
   {
@@ -123,6 +124,7 @@ const Header = () => {
                         )}
                       >
                         <subItem.icon className={cn("h-5 w-5", currentPath === subItem.path ? module.color : '')} />
+                        <span className="text-xs mt-1">{subItem.title}</span>
                       </Link>
                     ))}
                   </div>

@@ -11,7 +11,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
-import { MessageCircle } from "lucide-react";
+import { Settings } from "lucide-react";
 
 const POSSetupPage = () => {
   const [activeTab, setActiveTab] = useState("tables");
@@ -21,9 +21,9 @@ const POSSetupPage = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">POS Setup</h1>
+            <h1 className="text-2xl font-bold">POS Settings</h1>
             <p className="text-muted-foreground">
-              Configure POS settings, user permissions, and other options.
+              Configure POS settings, tables, menu items, and more
             </p>
           </div>
         </div>
@@ -44,7 +44,7 @@ const POSSetupPage = () => {
               <h2 className="text-xl font-semibold">Tables Management</h2>
               <Link to="/pos/tables">
                 <Button>
-                  <MessageCircle className="mr-2 h-4 w-4" />
+                  <Settings className="mr-2 h-4 w-4" />
                   Visual Table Layout
                 </Button>
               </Link>
