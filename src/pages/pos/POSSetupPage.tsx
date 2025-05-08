@@ -4,13 +4,15 @@ import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Menu, Clock, DollarSign, Printer } from "lucide-react";
+import { Menu, Clock, DollarSign, Printer, FileText, SlidersHorizontal, Wheat, Percent, ArrowLeft, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const POSSetupPage = () => {
   const [activeTab, setActiveTab] = useState("tables");
+  const [activeMenuSection, setActiveMenuSection] = useState("categories");
 
   return (
     <Layout>
@@ -55,22 +57,128 @@ const POSSetupPage = () => {
             <Card>
               <CardContent className="pt-6">
                 <p className="mb-4">
-                  Add items for sale into the POS. Manage categories, modifiers, and ingredients with weight or units of measure for cost estimation. Set customer prices and control item visibility.
+                  Add items for sale into the POS. Manage categories, modifiers, and ingredients with weight or units of measure for cost estimation and item price. Include visibility control for the Sales side.
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="p-4 border rounded-md">
-                    <h3 className="font-medium">Categories</h3>
-                    <p className="text-sm text-muted-foreground">Organize items into categories</p>
-                  </div>
-                  <div className="p-4 border rounded-md">
-                    <h3 className="font-medium">Ingredients</h3>
-                    <p className="text-sm text-muted-foreground">Track costs and inventory</p>
-                  </div>
-                  <div className="p-4 border rounded-md">
-                    <h3 className="font-medium">Pricing</h3>
-                    <p className="text-sm text-muted-foreground">Set prices and discounts</p>
-                  </div>
+                
+                {/* Horizontal Toggle Group for Menu Sections */}
+                <div className="mb-6 overflow-x-auto pb-2">
+                  <ToggleGroup 
+                    type="single"
+                    value={activeMenuSection}
+                    onValueChange={(value) => value && setActiveMenuSection(value)} 
+                    className="flex flex-wrap gap-2"
+                    variant="outline"
+                  >
+                    <ToggleGroupItem 
+                      value="categories" 
+                      className={`flex items-center gap-2 ${activeMenuSection === "categories" ? "bg-green-500 text-white hover:bg-green-600" : ""}`}
+                    >
+                      <Menu className="h-4 w-4" />
+                      <span>Categories</span>
+                    </ToggleGroupItem>
+                    <ToggleGroupItem 
+                      value="items" 
+                      className={`flex items-center gap-2 ${activeMenuSection === "items" ? "bg-green-500 text-white hover:bg-green-600" : ""}`}
+                    >
+                      <FileText className="h-4 w-4" />
+                      <span>Items</span>
+                    </ToggleGroupItem>
+                    <ToggleGroupItem 
+                      value="modifiers" 
+                      className={`flex items-center gap-2 ${activeMenuSection === "modifiers" ? "bg-green-500 text-white hover:bg-green-600" : ""}`}
+                    >
+                      <SlidersHorizontal className="h-4 w-4" />
+                      <span>Modifiers</span>
+                    </ToggleGroupItem>
+                    <ToggleGroupItem 
+                      value="ingredients" 
+                      className={`flex items-center gap-2 ${activeMenuSection === "ingredients" ? "bg-green-500 text-white hover:bg-green-600" : ""}`}
+                    >
+                      <Wheat className="h-4 w-4" />
+                      <span>Ingredients</span>
+                    </ToggleGroupItem>
+                    <ToggleGroupItem 
+                      value="discounts" 
+                      className={`flex items-center gap-2 ${activeMenuSection === "discounts" ? "bg-green-500 text-white hover:bg-green-600" : ""}`}
+                    >
+                      <Percent className="h-4 w-4" />
+                      <span>Discounts</span>
+                    </ToggleGroupItem>
+                    <ToggleGroupItem 
+                      value="refunds" 
+                      className={`flex items-center gap-2 ${activeMenuSection === "refunds" ? "bg-green-500 text-white hover:bg-green-600" : ""}`}
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                      <span>Refunds</span>
+                    </ToggleGroupItem>
+                  </ToggleGroup>
                 </div>
+
+                {/* Content based on selected section */}
+                {activeMenuSection === "categories" && (
+                  <div className="p-4 border rounded-md">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="font-medium">Categories</h3>
+                      <Button size="sm" variant="outline">Add Category</Button>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Organize menu items into categories</p>
+                  </div>
+                )}
+
+                {activeMenuSection === "items" && (
+                  <div className="p-4 border rounded-md">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="font-medium">Items</h3>
+                      <Button size="sm" variant="outline">Add Item</Button>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Manage individual menu items with pricing</p>
+                    <div className="mt-4 flex items-center space-x-2">
+                      <Eye className="h-4 w-4" />
+                      <span className="text-sm">Item Visibility</span>
+                      <Switch id="item-visibility" />
+                    </div>
+                  </div>
+                )}
+
+                {activeMenuSection === "modifiers" && (
+                  <div className="p-4 border rounded-md">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="font-medium">Modifiers</h3>
+                      <Button size="sm" variant="outline">Add Modifier</Button>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Add options that modify menu items</p>
+                  </div>
+                )}
+
+                {activeMenuSection === "ingredients" && (
+                  <div className="p-4 border rounded-md">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="font-medium">Ingredients</h3>
+                      <Button size="sm" variant="outline">Add Ingredient</Button>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Manage ingredients with units of measure for cost tracking</p>
+                  </div>
+                )}
+
+                {activeMenuSection === "discounts" && (
+                  <div className="p-4 border rounded-md">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="font-medium">Discounts</h3>
+                      <Button size="sm" variant="outline">Add Discount</Button>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Configure promotional discounts</p>
+                  </div>
+                )}
+
+                {activeMenuSection === "refunds" && (
+                  <div className="p-4 border rounded-md">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="font-medium">Refunds</h3>
+                      <Button size="sm" variant="outline">Refund Settings</Button>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Manage refund policies and procedures</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -109,7 +217,7 @@ const POSSetupPage = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className="font-medium">Open tickets</h4>
-                        <p className="text-sm text-muted-foreground">Save and edit orders before payment</p>
+                        <p className="text-sm text-muted-foreground">Allow to save and edit orders before payment</p>
                       </div>
                       <Switch id="open-tickets" />
                     </div>
