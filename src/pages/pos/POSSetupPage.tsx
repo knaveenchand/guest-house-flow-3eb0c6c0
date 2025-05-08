@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -18,6 +17,7 @@ import MenuItemsList from "@/components/pos/MenuItemsList";
 import AddMenuItemForm from "@/components/pos/AddMenuItemForm";
 import IngredientsTable from "@/components/pos/IngredientsTable";
 import { toast } from "sonner";
+import EditMenuItemForm from "@/components/pos/EditMenuItemForm";
 
 const POSSetupPage = () => {
   const [activeTab, setActiveTab] = useState("tables");
@@ -65,6 +65,10 @@ const POSSetupPage = () => {
     { value: "Wheat", label: "Wheat" },
     { value: "Clock", label: "Clock" }
   ];
+
+  // State for editing menu item
+  const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   // Function to add a new category
   const handleAddCategory = (name: string, color: string, icon: string) => {
@@ -145,6 +149,19 @@ const POSSetupPage = () => {
     
     const itemName = menuItems.find(item => item.id === id)?.name;
     toast.success(`${itemName} is now ${visible ? 'visible' : 'hidden'}`);
+  };
+
+  // Function to handle edit menu item
+  const handleEditItem = (item: MenuItem) => {
+    setEditingItem(item);
+    setIsEditDialogOpen(true);
+  };
+
+  // Function to update a menu item
+  const handleUpdateMenuItem = (updatedItem: MenuItem) => {
+    setMenuItems(menuItems.map(item => 
+      item.id === updatedItem.id ? updatedItem : item
+    ));
   };
 
   // Function to add a new ingredient
@@ -298,6 +315,7 @@ const POSSetupPage = () => {
                       items={menuItems}
                       categories={categories.map(c => ({ id: c.id, name: c.name }))}
                       onDeleteItem={handleDeleteMenuItem}
+                      onEditItem={handleEditItem}
                       onToggleVisibility={handleToggleItemVisibility}
                     />
                     
@@ -494,6 +512,18 @@ const POSSetupPage = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Edit Menu Item Dialog */}
+      {editingItem && (
+        <EditMenuItemForm
+          open={isEditDialogOpen}
+          setOpen={setIsEditDialogOpen}
+          item={editingItem}
+          categories={categories}
+          ingredients={ingredients}
+          onUpdateItem={handleUpdateMenuItem}
+        />
+      )}
     </Layout>
   );
 };
