@@ -38,12 +38,29 @@ import GuestTVSetupPage from "./pages/guesttv/GuestTVSetupPage";
 
 const queryClient = new QueryClient();
 
+// Determine the basename based on the current environment
+const getBasename = () => {
+  // If we're in development, use no basename
+  if (import.meta.env.DEV) {
+    return "/";
+  }
+  
+  // For production, check if we're in the Apache directory structure
+  const path = window.location.pathname;
+  if (path.includes('/hotel-timor/guest-house-flow-3eb0c6c0/dist/')) {
+    return '/hotel-timor/guest-house-flow-3eb0c6c0/dist';
+  }
+  
+  // Default fallback
+  return "/";
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename={getBasename()}>
         <Routes>
           <Route path="/" element={<Index />} />
           

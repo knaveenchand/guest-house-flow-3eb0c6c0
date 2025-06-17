@@ -1,12 +1,12 @@
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Hotel } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const NotFound = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.error(
@@ -14,6 +14,10 @@ const NotFound = () => {
       location.pathname
     );
   }, [location.pathname]);
+
+  const handleReturnToDashboard = () => {
+    navigate("/", { replace: true });
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white">
@@ -25,8 +29,8 @@ const NotFound = () => {
         <p className="text-xl text-muted-foreground mb-6">
           Oops! This page doesn't exist in Hotel Esplanada.
         </p>
-        <Button asChild>
-          <Link to="/">Return to Dashboard</Link>
+        <Button onClick={handleReturnToDashboard}>
+          Return to Dashboard
         </Button>
       </div>
     </div>
