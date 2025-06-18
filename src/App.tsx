@@ -45,7 +45,14 @@ const getBasename = () => {
     return "/";
   }
   
-  // For production, check if we're in the Apache directory structure
+  // For Firebase hosting, use root path
+  if (window.location.hostname.includes('web.app') || 
+      window.location.hostname.includes('firebaseapp.com') ||
+      window.location.hostname.includes('firebase.app')) {
+    return "/";
+  }
+  
+  // For Apache hosting (your current setup)
   const path = window.location.pathname;
   if (path.includes('/hotel-timor/guest-house-flow-3eb0c6c0/dist/')) {
     return '/hotel-timor/guest-house-flow-3eb0c6c0/dist';
