@@ -23,4 +23,3 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TOURDETIMOR20180820 }}'
           channelId: preview
           projectId: tourdetimor20180820
-          projectId: tourdetimor20180820
