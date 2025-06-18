@@ -47,7 +47,7 @@ const bookings: Booking[] = [
   },
   {
     id: "B1235",
-    guestName: "Sarah Williams",
+    guestName: "Sarah Williams Venus",
     roomNumber: "203",
     checkIn: "2025-05-03",
     checkOut: "2025-05-10",
