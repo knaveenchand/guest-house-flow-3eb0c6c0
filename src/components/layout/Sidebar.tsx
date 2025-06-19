@@ -30,7 +30,7 @@ const menuItems = [
     icon: Bed,
   },
   {
-    title: "POS",
+    title: "F&B",
     path: "/pos",
     icon: Computer,
   },

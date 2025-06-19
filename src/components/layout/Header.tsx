@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
@@ -26,7 +27,7 @@ const modules = [
     ]
   },
   {
-    title: "POS",
+    title: "F&B",
     path: "/pos",
     icon: Computer,
     color: "text-green-500",
