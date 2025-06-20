@@ -94,7 +94,7 @@ const POSPage = () => {
           <div className="flex items-center gap-2 p-4 border-b bg-gray-50">
             <Button
               variant={selectedCategory === "all" ? "default" : "outline"}
-              className={selectedCategory === "all" ? "bg-green-600 text-white" : ""}
+              className={selectedCategory === "all" ? "bg-green-600 text-white hover:bg-green-700" : "bg-green-600 text-black hover:bg-green-700 hover:text-white"}
               onClick={() => setSelectedCategory("all")}
             >
               All
@@ -102,8 +102,11 @@ const POSPage = () => {
             {categories.map((category) => (
               <Button
                 key={category.id}
-                variant={selectedCategory === category.id ? "default" : "outline"}
-                className={selectedCategory === category.id ? `${category.color} text-white` : ""}
+                variant="outline"
+                className={selectedCategory === category.id 
+                  ? `${category.color} text-white border-gray-400 hover:opacity-90` 
+                  : `${category.color} text-black border-gray-400 hover:opacity-90 hover:text-white`
+                }
                 onClick={() => setSelectedCategory(category.id)}
               >
                 {category.name}
