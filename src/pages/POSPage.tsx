@@ -1,3 +1,4 @@
+
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,8 +28,8 @@ const menuItems = [
   { id: 5, name: "Pasta Carbonara", price: 14.00, category: "pasta", image: null },
 ];
 
-const rooms = Array.from({ length: 20 }, (_, i) => ({ id: i + 101, number: `${i + 101}` }));
-const tables = Array.from({ length: 15 }, (_, i) => ({ id: i + 1, number: `${i + 1}` }));
+const rooms = Array.from({ length: 20 }, (_, i) => ({ id: i + 101, number: `${i + 101}` })).reverse();
+const tables = Array.from({ length: 15 }, (_, i) => ({ id: i + 1, number: `${i + 1}` })).reverse();
 
 interface OrderItem {
   id: number;
@@ -186,7 +187,7 @@ const POSPage = () => {
           <div className="p-4 border-t relative">
             {/* Room Selection Dropdown - positioned above Room button */}
             {roomModalOpen && (
-              <div className="absolute bottom-20 right-[165px] w-16 bg-pink-600 border border-pink-700 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
+              <div className="absolute bottom-20 right-[82px] w-[70px] bg-pink-600 border border-pink-700 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
                 {rooms.map((room, index) => (
                   <button
                     key={room.id}
@@ -201,7 +202,7 @@ const POSPage = () => {
 
             {/* Table Selection Dropdown - positioned above Table button */}
             {tableModalOpen && (
-              <div className="absolute bottom-20 right-[83px] w-16 bg-orange-600 border border-orange-700 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
+              <div className="absolute bottom-20 right-[6px] w-[70px] bg-orange-600 border border-orange-700 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
                 {tables.map((table, index) => (
                   <button
                     key={table.id}
