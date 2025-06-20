@@ -187,7 +187,7 @@ const POSPage = () => {
           <div className="p-4 border-t relative">
             {/* Room Selection Dropdown - positioned directly above Room button with matching width */}
             {roomModalOpen && (
-              <div className="absolute bottom-[180px] right-[78px] w-[78px] bg-pink-600 border border-pink-700 rounded-lg shadow-lg z-50 h-[160px] overflow-y-auto scrollbar-hide">
+              <div className="absolute bottom-[104px] right-[84px] w-[70px] bg-pink-600 border border-pink-700 rounded-lg shadow-lg z-50 h-[160px] overflow-y-auto scrollbar-hide">
                 {rooms.map((room, index) => (
                   <button
                     key={room.id}
@@ -202,7 +202,7 @@ const POSPage = () => {
 
             {/* Table Selection Dropdown - positioned directly above Table button with matching width */}
             {tableModalOpen && (
-              <div className="absolute bottom-[180px] right-[4px] w-[78px] bg-orange-600 border border-orange-700 rounded-lg shadow-lg z-50 h-[160px] overflow-y-auto scrollbar-hide">
+              <div className="absolute bottom-[104px] right-[4px] w-[70px] bg-orange-600 border border-orange-700 rounded-lg shadow-lg z-50 h-[160px] overflow-y-auto scrollbar-hide">
                 {tables.map((table, index) => (
                   <button
                     key={table.id}
