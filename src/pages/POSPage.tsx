@@ -190,8 +190,8 @@ const POSPage = () => {
               </div>
             </div>
             
-            {/* Payment Buttons - Grouped in 2x2 grid */}
-            <div className="grid grid-cols-2 gap-2">
+            {/* Payment Buttons - All in one row */}
+            <div className="grid grid-cols-4 gap-2">
               <Button className="bg-green-600 hover:bg-green-700 text-white py-3">
                 Cash
               </Button>
