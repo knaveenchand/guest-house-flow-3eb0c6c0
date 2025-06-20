@@ -187,7 +187,7 @@ const POSPage = () => {
           <div className="p-4 border-t relative">
             {/* Room Selection Dropdown - positioned much higher above payment buttons */}
             {roomModalOpen && (
-              <div className="absolute bottom-[180px] right-[82px] w-[70px] bg-pink-600 border border-pink-700 rounded-lg shadow-lg z-50 h-[250px] overflow-y-auto">
+              <div className="absolute bottom-[180px] right-[82px] w-[70px] bg-pink-600 border border-pink-700 rounded-lg shadow-lg z-50 h-[160px] overflow-y-auto scrollbar-hide">
                 {rooms.map((room, index) => (
                   <button
                     key={room.id}
@@ -202,7 +202,7 @@ const POSPage = () => {
 
             {/* Table Selection Dropdown - positioned much higher above payment buttons */}
             {tableModalOpen && (
-              <div className="absolute bottom-[180px] right-[6px] w-[70px] bg-orange-600 border border-orange-700 rounded-lg shadow-lg z-50 h-[250px] overflow-y-auto">
+              <div className="absolute bottom-[180px] right-[6px] w-[70px] bg-orange-600 border border-orange-700 rounded-lg shadow-lg z-50 h-[160px] overflow-y-auto scrollbar-hide">
                 {tables.map((table, index) => (
                   <button
                     key={table.id}
