@@ -1,11 +1,10 @@
-
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Settings, Plus, Minus } from "lucide-react";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 // Mock data - in a real app this would come from your settings/database
 const categories = [
@@ -183,53 +182,47 @@ const POSPage = () => {
             )}
           </div>
 
-          {/* Modal dialogs positioned above price */}
-          <div className="p-4 border-t">
-            <div className="flex justify-end mb-2 gap-2">
-              <Dialog open={roomModalOpen} onOpenChange={setRoomModalOpen}>
-                <DialogContent className="max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Select Room</DialogTitle>
-                  </DialogHeader>
-                  <div className="max-h-96 overflow-y-auto">
-                    <div className="grid grid-cols-4 gap-2">
-                      {rooms.map((room) => (
-                        <Button
-                          key={room.id}
-                          variant="outline"
-                          onClick={() => handleRoomSelection(room.number)}
-                          className="h-12"
-                        >
-                          {room.number}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+          {/* Bottom section with total and payment buttons */}
+          <div className="p-4 border-t relative">
+            {/* Room Selection Dropdown */}
+            {roomModalOpen && (
+              <div className="absolute bottom-20 right-4 w-20 bg-pink-100 border border-pink-300 rounded-lg shadow-lg z-50">
+                <div className="max-h-64 overflow-y-auto">
+                  {rooms.map((room, index) => (
+                    <button
+                      key={room.id}
+                      onClick={() => handleRoomSelection(room.number)}
+                      className="w-full px-3 py-2 text-center hover:bg-pink-200 border-b border-pink-200 last:border-b-0"
+                      style={{
+                        backgroundColor: `hsl(${320 + (index * 5)}, 70%, ${85 - (index * 2)}%)`
+                      }}
+                    >
+                      {room.number}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
-              <Dialog open={tableModalOpen} onOpenChange={setTableModalOpen}>
-                <DialogContent className="max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Select Table</DialogTitle>
-                  </DialogHeader>
-                  <div className="max-h-96 overflow-y-auto">
-                    <div className="grid grid-cols-5 gap-2">
-                      {tables.map((table) => (
-                        <Button
-                          key={table.id}
-                          variant="outline"
-                          onClick={() => setTableModalOpen(false)}
-                          className="h-12"
-                        >
-                          {table.number}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
+            {/* Table Selection Dropdown */}
+            {tableModalOpen && (
+              <div className="absolute bottom-20 right-0 w-20 bg-orange-100 border border-orange-300 rounded-lg shadow-lg z-50">
+                <div className="max-h-64 overflow-y-auto">
+                  {tables.map((table, index) => (
+                    <button
+                      key={table.id}
+                      onClick={() => setTableModalOpen(false)}
+                      className="w-full px-3 py-2 text-center hover:bg-orange-200 border-b border-orange-200 last:border-b-0"
+                      style={{
+                        backgroundColor: `hsl(${30 + (index * 5)}, 70%, ${85 - (index * 2)}%)`
+                      }}
+                    >
+                      {table.number}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Total */}
             <div className="text-center mb-4">
@@ -248,13 +241,19 @@ const POSPage = () => {
               </Button>
               <Button 
                 className="bg-pink-600 hover:bg-pink-700 text-white py-3"
-                onClick={() => setRoomModalOpen(true)}
+                onClick={() => {
+                  setTableModalOpen(false);
+                  setRoomModalOpen(!roomModalOpen);
+                }}
               >
                 Room
               </Button>
               <Button 
                 className="bg-orange-600 hover:bg-orange-700 text-white py-3"
-                onClick={() => setTableModalOpen(true)}
+                onClick={() => {
+                  setRoomModalOpen(false);
+                  setTableModalOpen(!tableModalOpen);
+                }}
               >
                 Table
               </Button>
