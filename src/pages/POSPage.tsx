@@ -283,7 +283,7 @@ const POSPage = () => {
                 In restaurant
               </Button>
             </div>
-          </div>
+          </DialogContent>
         </Dialog>
       </div>
     </Layout>
