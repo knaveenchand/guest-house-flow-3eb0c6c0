@@ -182,25 +182,25 @@ const POSPage = () => {
             )}
           </div>
 
-          {/* Total */}
+          {/* Total and Payment Buttons */}
           <div className="p-4 border-t">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-red-600 mb-4">
+            <div className="text-center mb-4">
+              <div className="text-3xl font-bold text-red-600">
                 ${total.toFixed(2)}
               </div>
             </div>
             
-            {/* Payment Buttons */}
-            <div className="flex justify-center gap-4">
-              <Button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3">
+            {/* Payment Buttons - Grouped in 2x2 grid */}
+            <div className="grid grid-cols-2 gap-2">
+              <Button className="bg-green-600 hover:bg-green-700 text-white py-3">
                 Cash
               </Button>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white py-3">
                 Card
               </Button>
               <Dialog open={roomModalOpen} onOpenChange={setRoomModalOpen}>
                 <DialogTrigger asChild>
-                  <Button className="bg-pink-600 hover:bg-pink-700 text-white px-8 py-3">
+                  <Button className="bg-pink-600 hover:bg-pink-700 text-white py-3">
                     Room
                   </Button>
                 </DialogTrigger>
@@ -226,7 +226,7 @@ const POSPage = () => {
               </Dialog>
               <Dialog open={tableModalOpen} onOpenChange={setTableModalOpen}>
                 <DialogTrigger asChild>
-                  <Button className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3">
+                  <Button className="bg-orange-600 hover:bg-orange-700 text-white py-3">
                     Table
                   </Button>
                 </DialogTrigger>
