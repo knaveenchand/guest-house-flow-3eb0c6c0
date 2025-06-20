@@ -1,5 +1,3 @@
-
-
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -186,9 +184,9 @@ const POSPage = () => {
 
           {/* Bottom section with dropdowns and payment buttons */}
           <div className="p-4 border-t relative">
-            {/* Room Selection Dropdown - positioned above payment buttons */}
+            {/* Room Selection Dropdown - positioned above payment buttons with increased height */}
             {roomModalOpen && (
-              <div className="absolute bottom-[120px] right-[82px] w-[70px] bg-pink-600 border border-pink-700 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
+              <div className="absolute bottom-[70px] right-[82px] w-[70px] bg-pink-600 border border-pink-700 rounded-lg shadow-lg z-50 h-[250px] overflow-y-auto">
                 {rooms.map((room, index) => (
                   <button
                     key={room.id}
@@ -201,9 +199,9 @@ const POSPage = () => {
               </div>
             )}
 
-            {/* Table Selection Dropdown - positioned above payment buttons */}
+            {/* Table Selection Dropdown - positioned above payment buttons with increased height */}
             {tableModalOpen && (
-              <div className="absolute bottom-[120px] right-[6px] w-[70px] bg-orange-600 border border-orange-700 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
+              <div className="absolute bottom-[70px] right-[6px] w-[70px] bg-orange-600 border border-orange-700 rounded-lg shadow-lg z-50 h-[250px] overflow-y-auto">
                 {tables.map((table, index) => (
                   <button
                     key={table.id}
@@ -282,4 +280,3 @@ const POSPage = () => {
 };
 
 export default POSPage;
-
