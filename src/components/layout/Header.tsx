@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
@@ -34,8 +33,8 @@ const modules = [
     bgColor: "bg-green-950/40",
     borderColor: "border-green-500",
     subMenu: [
-      { title: "Sales", icon: ShoppingCart, path: "/pos" },
-      { title: "Inventory", icon: Package, path: "/pos/inventory" },
+      { title: "POS", icon: ShoppingCart, path: "/pos" },
+      { title: "Kitchen", icon: Package, path: "/pos/inventory" },
       { title: "Settings", icon: Settings, path: "/pos/setup" }
     ]
   },
