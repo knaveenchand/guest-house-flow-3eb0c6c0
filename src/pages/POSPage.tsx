@@ -113,8 +113,8 @@ const POSPage = () => {
               </Button>
             ))}
             <div className="ml-auto">
-              <Button variant="outline" size="icon">
-                <Settings className="h-4 w-4" />
+              <Button variant="outline" size="icon" className="bg-white border-gray-300 hover:bg-gray-50">
+                <Settings className="h-4 w-4 text-gray-700" />
               </Button>
             </div>
           </div>
