@@ -247,20 +247,74 @@ const POSPage = () => {
             )}
           </div>
 
-          {/* Modifiers Section */}
-          <div className="p-4 border-t border-b bg-gray-50">
-            <h3 className="text-sm font-medium text-center text-gray-600">Modifiers</h3>
-            <div className="mt-2 text-center text-sm text-gray-400">
-              Select an item to add modifiers
-            </div>
-          </div>
-
           {/* Total */}
-          <div className="p-4">
+          <div className="p-4 border-t">
             <div className="text-center">
-              <div className="text-3xl font-bold text-red-600">
+              <div className="text-3xl font-bold text-red-600 mb-4">
                 ${total.toFixed(2)}
               </div>
+            </div>
+            
+            {/* Payment Buttons */}
+            <div className="flex justify-center gap-4">
+              <Button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3">
+                Cash
+              </Button>
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
+                Card
+              </Button>
+              <Dialog open={roomModalOpen} onOpenChange={setRoomModalOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-pink-600 hover:bg-pink-700 text-white px-8 py-3">
+                    Room
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Select Room</DialogTitle>
+                  </DialogHeader>
+                  <div className="max-h-96 overflow-y-auto">
+                    <div className="grid grid-cols-4 gap-2">
+                      {rooms.map((room) => (
+                        <Button
+                          key={room.id}
+                          variant="outline"
+                          onClick={() => handleRoomSelection(room.number)}
+                          className="h-12"
+                        >
+                          {room.number}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Dialog open={tableModalOpen} onOpenChange={setTableModalOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3">
+                    Table
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Select Table</DialogTitle>
+                  </DialogHeader>
+                  <div className="max-h-96 overflow-y-auto">
+                    <div className="grid grid-cols-5 gap-2">
+                      {tables.map((table) => (
+                        <Button
+                          key={table.id}
+                          variant="outline"
+                          onClick={() => setTableModalOpen(false)}
+                          className="h-12"
+                        >
+                          {table.number}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </div>
