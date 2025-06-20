@@ -1,3 +1,4 @@
+
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -182,28 +183,10 @@ const POSPage = () => {
             )}
           </div>
 
-          {/* Total and Payment Buttons */}
+          {/* Modal dialogs positioned above price */}
           <div className="p-4 border-t">
-            <div className="text-center mb-4">
-              <div className="text-3xl font-bold text-red-600">
-                ${total.toFixed(2)}
-              </div>
-            </div>
-            
-            {/* Payment Buttons - All in one row */}
-            <div className="grid grid-cols-4 gap-2">
-              <Button className="bg-green-600 hover:bg-green-700 text-white py-3">
-                Cash
-              </Button>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white py-3">
-                Card
-              </Button>
+            <div className="flex justify-end mb-2 gap-2">
               <Dialog open={roomModalOpen} onOpenChange={setRoomModalOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-pink-600 hover:bg-pink-700 text-white py-3">
-                    Room
-                  </Button>
-                </DialogTrigger>
                 <DialogContent className="max-w-md">
                   <DialogHeader>
                     <DialogTitle>Select Room</DialogTitle>
@@ -224,12 +207,8 @@ const POSPage = () => {
                   </div>
                 </DialogContent>
               </Dialog>
+
               <Dialog open={tableModalOpen} onOpenChange={setTableModalOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-orange-600 hover:bg-orange-700 text-white py-3">
-                    Table
-                  </Button>
-                </DialogTrigger>
                 <DialogContent className="max-w-md">
                   <DialogHeader>
                     <DialogTitle>Select Table</DialogTitle>
@@ -250,6 +229,35 @@ const POSPage = () => {
                   </div>
                 </DialogContent>
               </Dialog>
+            </div>
+
+            {/* Total */}
+            <div className="text-center mb-4">
+              <div className="text-3xl font-bold text-red-600">
+                ${total.toFixed(2)}
+              </div>
+            </div>
+            
+            {/* Payment Buttons - All in one row */}
+            <div className="grid grid-cols-4 gap-2">
+              <Button className="bg-green-600 hover:bg-green-700 text-white py-3">
+                Cash
+              </Button>
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white py-3">
+                Card
+              </Button>
+              <Button 
+                className="bg-pink-600 hover:bg-pink-700 text-white py-3"
+                onClick={() => setRoomModalOpen(true)}
+              >
+                Room
+              </Button>
+              <Button 
+                className="bg-orange-600 hover:bg-orange-700 text-white py-3"
+                onClick={() => setTableModalOpen(true)}
+              >
+                Table
+              </Button>
             </div>
           </div>
         </div>
@@ -275,7 +283,7 @@ const POSPage = () => {
                 In restaurant
               </Button>
             </div>
-          </DialogContent>
+          </div>
         </Dialog>
       </div>
     </Layout>
