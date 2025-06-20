@@ -112,9 +112,11 @@ const POSPage = () => {
                 {category.name}
               </Button>
             ))}
-            <Button variant="outline" size="icon" className="ml-auto">
-              <Settings className="h-4 w-4" />
-            </Button>
+            <div className="ml-auto">
+              <Button variant="outline" size="icon">
+                <Settings className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           {/* Items Grid */}
