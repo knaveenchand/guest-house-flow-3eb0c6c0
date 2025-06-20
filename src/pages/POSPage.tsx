@@ -182,57 +182,40 @@ const POSPage = () => {
             )}
           </div>
 
-          {/* Bottom section with total and payment buttons */}
+          {/* Bottom section with dropdowns and payment buttons */}
           <div className="p-4 border-t relative">
-            {/* Room Selection Dropdown */}
+            {/* Room Selection Dropdown - positioned above Room button */}
             {roomModalOpen && (
-              <div className="absolute bottom-20 right-4 w-20 bg-pink-100 border border-pink-300 rounded-lg shadow-lg z-50">
-                <div className="max-h-64 overflow-y-auto">
-                  {rooms.map((room, index) => (
-                    <button
-                      key={room.id}
-                      onClick={() => handleRoomSelection(room.number)}
-                      className="w-full px-3 py-2 text-center hover:bg-pink-200 border-b border-pink-200 last:border-b-0"
-                      style={{
-                        backgroundColor: `hsl(${320 + (index * 5)}, 70%, ${85 - (index * 2)}%)`
-                      }}
-                    >
-                      {room.number}
-                    </button>
-                  ))}
-                </div>
+              <div className="absolute bottom-20 right-[165px] w-16 bg-pink-600 border border-pink-700 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
+                {rooms.map((room, index) => (
+                  <button
+                    key={room.id}
+                    onClick={() => handleRoomSelection(room.number)}
+                    className="w-full px-2 py-2 text-center text-white hover:bg-pink-700 border-b border-pink-500 last:border-b-0 text-sm"
+                  >
+                    {room.number}
+                  </button>
+                ))}
               </div>
             )}
 
-            {/* Table Selection Dropdown */}
+            {/* Table Selection Dropdown - positioned above Table button */}
             {tableModalOpen && (
-              <div className="absolute bottom-20 right-0 w-20 bg-orange-100 border border-orange-300 rounded-lg shadow-lg z-50">
-                <div className="max-h-64 overflow-y-auto">
-                  {tables.map((table, index) => (
-                    <button
-                      key={table.id}
-                      onClick={() => setTableModalOpen(false)}
-                      className="w-full px-3 py-2 text-center hover:bg-orange-200 border-b border-orange-200 last:border-b-0"
-                      style={{
-                        backgroundColor: `hsl(${30 + (index * 5)}, 70%, ${85 - (index * 2)}%)`
-                      }}
-                    >
-                      {table.number}
-                    </button>
-                  ))}
-                </div>
+              <div className="absolute bottom-20 right-[83px] w-16 bg-orange-600 border border-orange-700 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
+                {tables.map((table, index) => (
+                  <button
+                    key={table.id}
+                    onClick={() => setTableModalOpen(false)}
+                    className="w-full px-2 py-2 text-center text-white hover:bg-orange-700 border-b border-orange-500 last:border-b-0 text-sm"
+                  >
+                    {table.number}
+                  </button>
+                ))}
               </div>
             )}
-
-            {/* Total */}
-            <div className="text-center mb-4">
-              <div className="text-3xl font-bold text-red-600">
-                ${total.toFixed(2)}
-              </div>
-            </div>
             
             {/* Payment Buttons - All in one row */}
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-2 mb-4">
               <Button className="bg-green-600 hover:bg-green-700 text-white py-3">
                 Cash
               </Button>
@@ -257,6 +240,13 @@ const POSPage = () => {
               >
                 Table
               </Button>
+            </div>
+
+            {/* Total - moved to bottom */}
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+              <div className="text-3xl font-bold text-red-600">
+                ${total.toFixed(2)}
+              </div>
             </div>
           </div>
         </div>
