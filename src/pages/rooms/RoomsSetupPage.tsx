@@ -4,7 +4,7 @@ import Layout from "@/components/layout/Layout";
 import { toast } from "sonner";
 
 import { RoomType, getRoomTypes, updateRoomType } from "@/api/roomTypes";
-import { BookingChannel, getBookingChannels, addBookingChannel, updateBookingChannel, deleteBookingChannel } from "@/api/bookingChannels";
+import { BookingChannel, getBookingChannels } from "@/api/bookingChannels";
 
 import RoomTypesSection from "@/components/rooms/RoomTypesSection";
 import RatePlansSection from "@/components/rooms/RatePlansSection";
@@ -88,82 +88,6 @@ const RoomsSetupPage = () => {
     }
   };
 
-  const handleAddChannel = async (channelName: string, commission: string, paymentType: string) => {
-    try {
-      const newChannel: Omit<BookingChannel, 'id'> = { 
-        name: channelName,
-        commission: parseFloat(commission) || 0,
-        paymentType: paymentType
-      };
-      
-      const docRef = await addBookingChannel(newChannel);
-      const addedChannel = { ...newChannel, id: docRef.id };
-      
-      setBookingChannels(prev => [...prev, addedChannel]);
-      toast.success(`Added ${channelName} to booking channels.`);
-    } catch (error) {
-      console.error("Error adding channel:", error);
-      toast.error("Failed to add booking channel.");
-    }
-  };
-
-  const handleEditChannel = async (oldName: string, newName: string) => {
-    const channelToUpdate = bookingChannels.find(bc => bc.name === oldName);
-    if (!channelToUpdate) {
-      toast.error("Could not find the channel to edit.");
-      return;
-    }
-
-    try {
-      await updateBookingChannel(channelToUpdate.id!, { name: newName });
-      setBookingChannels(prev => 
-        prev.map(c => c.id === channelToUpdate.id ? { ...c, name: newName } : c)
-      );
-      toast.success(`Updated channel from ${oldName} to ${newName}.`);
-    } catch (error) {
-      console.error("Error editing channel:", error);
-      toast.error("Failed to edit booking channel.");
-    }
-  };
-
-  const handleDeleteChannel = async (channelName: string) => {
-    const channelToDelete = bookingChannels.find(bc => bc.name === channelName);
-    if (!channelToDelete) {
-      toast.error("Could not find the channel to delete.");
-      return;
-    }
-    
-    // As a safeguard, you might want to prevent deleting critical channels
-    if (channelToDelete.name === "Walk-in") {
-        toast.error("The 'Walk-in' channel cannot be deleted.");
-        return;
-    }
-
-    try {
-      await deleteBookingChannel(channelToDelete.id!);
-      
-      // Also remove the rate from all room types that use this channel
-      const updatePromises = roomTypeList.map(rt => {
-        const { [channelToDelete.id!]: _, ...remainingRates } = rt.rates;
-        return updateRoomType(rt.id!, { rates: remainingRates });
-      });
-
-      await Promise.all(updatePromises);
-
-      // Update state locally
-      setBookingChannels(prev => prev.filter(c => c.id !== channelToDelete.id));
-      setRoomTypeList(prev => prev.map(rt => {
-          const { [channelToDelete.id!]: _, ...remainingRates } = rt.rates;
-          return { ...rt, rates: remainingRates };
-      }));
-
-      toast.success(`Deleted ${channelName} from booking channels.`);
-    } catch (error) {
-      console.error("Error deleting channel:", error);
-      toast.error("Failed to delete booking channel.");
-    }
-  };
-
   if (loading) {
     return <Layout><div>Loading...</div></Layout>;
   }
@@ -198,12 +122,7 @@ const RoomsSetupPage = () => {
           handleAddRatePlan={() => toast.info("This will be implemented later.")}
         />
         
-        <BookingChannelsSection 
-          bookingChannels={bookingChannels.map(c => c.name)}
-          handleEditChannel={handleEditChannel}
-          handleAddChannel={handleAddChannel}
-          handleDeleteChannel={handleDeleteChannel}
-        />
+        <BookingChannelsSection />
         
         <PoliciesSection />
       </div>
