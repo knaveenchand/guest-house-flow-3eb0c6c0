@@ -15,6 +15,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { RoomType } from "@/api/roomTypes";
+import { Amenity } from "@/api/amenities";
+import { BookingChannel } from "@/api/bookingChannels";
 
 // Define the color palette
 const colorOptions = [
@@ -44,29 +47,16 @@ const colorMap: Record<string, string> = {
   fuchsia: "bg-fuchsia-500",
 };
 
-interface RoomType {
-  name: string;
-  description: string;
-  maxGuests: number;
-  color: string;
-  amenities: string[];
-}
+type RoomTypeCoreData = Omit<RoomType, 'id' | 'rates' | 'roomNumbers' | 'amenities'>;
 
 interface AddRoomTypeDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: () => void;
+  onSave: (roomTypeData: RoomTypeCoreData, roomNumbers: string[], amenities: Amenity[]) => void;
   isEditMode: boolean;
-  newRoomType: RoomType;
-  setNewRoomType: React.Dispatch<React.SetStateAction<RoomType>>;
-  roomNumbers: string[];
-  setRoomNumbers: React.Dispatch<React.SetStateAction<string[]>>;
-  newRoomNumber: string;
-  setNewRoomNumber: React.Dispatch<React.SetStateAction<string>>;
-  selectedAmenities: string[];
-  setSelectedAmenities: React.Dispatch<React.SetStateAction<string[]>>;
-  availableAmenities: string[];
-  resetRoomTypeForm: () => void;
+  roomType: RoomType | null;
+  availableAmenities: Amenity[];
+  bookingChannels: BookingChannel[];
 }
 
 const AddRoomTypeDialog = ({
@@ -74,19 +64,44 @@ const AddRoomTypeDialog = ({
   onOpenChange,
   onSave,
   isEditMode,
-  newRoomType,
-  setNewRoomType,
-  roomNumbers,
-  setRoomNumbers,
-  newRoomNumber,
-  setNewRoomNumber,
-  selectedAmenities,
-  setSelectedAmenities,
+  roomType,
   availableAmenities,
-  resetRoomTypeForm,
 }: AddRoomTypeDialogProps) => {
-  // Sort available amenities alphabetically
-  const sortedAvailableAmenities = [...availableAmenities].sort();
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [maxGuests, setMaxGuests] = useState(2);
+  const [color, setColor] = useState("blue");
+  const [roomNumbers, setRoomNumbers] = useState<string[]>([]);
+  const [newRoomNumber, setNewRoomNumber] = useState("");
+  const [selectedAmenities, setSelectedAmenities] = useState<Amenity[]>([]);
+
+  useEffect(() => {
+    if (isOpen && roomType) {
+      setName(roomType.name);
+      setDescription(roomType.description);
+      setMaxGuests(roomType.maxGuests);
+      setColor(roomType.color);
+      setRoomNumbers(roomType.roomNumbers);
+      setSelectedAmenities(roomType.amenities);
+    } else {
+      resetForm();
+    }
+  }, [isOpen, roomType]);
+
+  const resetForm = () => {
+    setName("");
+    setDescription("");
+    setMaxGuests(2);
+    setColor("blue");
+    setRoomNumbers([]);
+    setNewRoomNumber("");
+    setSelectedAmenities([]);
+  };
+
+  const handleSave = () => {
+    const roomTypeData = { name, description, maxGuests, color };
+    onSave(roomTypeData, roomNumbers, selectedAmenities);
+  };
   
   const handleAddRoomNumber = () => {
     if (newRoomNumber && !roomNumbers.includes(newRoomNumber)) {
@@ -99,9 +114,9 @@ const AddRoomTypeDialog = ({
     setRoomNumbers(roomNumbers.filter(num => num !== roomNumber));
   };
   
-  const handleToggleAmenity = (amenity: string) => {
-    if (selectedAmenities.includes(amenity)) {
-      setSelectedAmenities(selectedAmenities.filter(a => a !== amenity));
+  const handleToggleAmenity = (amenity: Amenity) => {
+    if (selectedAmenities.find(a => a.id === amenity.id)) {
+      setSelectedAmenities(selectedAmenities.filter(a => a.id !== amenity.id));
     } else {
       setSelectedAmenities([...selectedAmenities, amenity]);
     }
@@ -123,8 +138,8 @@ const AddRoomTypeDialog = ({
             </Label>
             <Input
               id="name"
-              value={newRoomType.name}
-              onChange={(e) => setNewRoomType({ ...newRoomType, name: e.target.value })}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Standard Room"
               className="col-span-3"
             />
@@ -138,8 +153,8 @@ const AddRoomTypeDialog = ({
               type="number"
               min="1"
               max="10"
-              value={newRoomType.maxGuests}
-              onChange={(e) => setNewRoomType({ ...newRoomType, maxGuests: parseInt(e.target.value) })}
+              value={maxGuests}
+              onChange={(e) => setMaxGuests(parseInt(e.target.value))}
               className="col-span-3"
             />
           </div>
@@ -149,8 +164,8 @@ const AddRoomTypeDialog = ({
             </Label>
             <Textarea
               id="description"
-              value={newRoomType.description}
-              onChange={(e) => setNewRoomType({ ...newRoomType, description: e.target.value })}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of room features"
               className="col-span-3"
             />
@@ -205,19 +220,19 @@ const AddRoomTypeDialog = ({
             </Label>
             <div className="col-span-3">
               <div className="flex flex-wrap gap-2">
-                {sortedAvailableAmenities.map((amenity) => (
+                {availableAmenities.map((amenity) => (
                   <Badge 
-                    key={amenity} 
-                    variant={selectedAmenities.includes(amenity) ? "default" : "outline"}
+                    key={amenity.id} 
+                    variant={selectedAmenities.find(a => a.id === amenity.id) ? "default" : "outline"}
                     className="cursor-pointer py-1 px-3"
                     onClick={() => handleToggleAmenity(amenity)}
                   >
-                    {amenity}
+                    {amenity.name}
                   </Badge>
                 ))}
               </div>
               <p className="text-xs text-muted-foreground mt-2">
-                Selected: {selectedAmenities.sort().join(", ")}
+                Selected: {selectedAmenities.map(a => a.name).sort().join(", ")}
               </p>
             </div>
           </div>
@@ -229,32 +244,29 @@ const AddRoomTypeDialog = ({
             </Label>
             <div className="col-span-3">
               <div className="flex flex-wrap gap-2">
-                {colorOptions.map((color) => (
+                {colorOptions.map((c) => (
                   <div 
-                    key={color} 
+                    key={c} 
                     className={cn(
                       "w-8 h-8 rounded-full cursor-pointer border-2", 
-                      newRoomType.color === color ? "border-black" : "border-transparent",
-                      colorMap[color]
+                      color === c ? "border-black" : "border-transparent",
+                      colorMap[c]
                     )}
-                    onClick={() => setNewRoomType({ ...newRoomType, color })}
+                    onClick={() => setColor(c)}
                   />
                 ))}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Selected color: {newRoomType.color}
+                Selected color: {color}
               </p>
             </div>
           </div>
         </div>
         <DialogFooter>
-          <Button type="button" variant="outline" onClick={() => {
-            resetRoomTypeForm();
-            onOpenChange(false);
-          }}>
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button type="button" onClick={onSave}>
+          <Button type="button" onClick={handleSave}>
             {isEditMode ? "Update" : "Save"} Room Type
           </Button>
         </DialogFooter>

@@ -4,22 +4,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { RoomType } from "@/api/roomTypes";
 
 interface RoomTypeCardProps {
-  room: {
-    name: string;
-    totalRooms: number;
-    description: string;
-    color: string;
-    roomNumbers: string[];
-    amenities: string[];
-    maxGuests: number;
-  };
-  onEdit: (index: number) => void;
-  index: number;
+  room: RoomType;
+  onEdit: () => void;
 }
 
-const RoomTypeCard = ({ room, onEdit, index }: RoomTypeCardProps) => {
+const RoomTypeCard = ({ room, onEdit }: RoomTypeCardProps) => {
   // Map colors to Tailwind classes
   const colorMap: Record<string, string> = {
     blue: "bg-blue-500",
@@ -43,14 +35,14 @@ const RoomTypeCard = ({ room, onEdit, index }: RoomTypeCardProps) => {
   };
 
   // Sort amenities alphabetically
-  const sortedAmenities = [...room.amenities].sort();
+  const sortedAmenities = [...room.amenities].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <Card key={room.name} className="w-full">
+    <Card key={room.id} className="w-full">
       <CardContent className="pt-4">
         <div className="flex items-center mb-3">
           <div className="flex items-center gap-2">
-            <BedDouble className={`h-5 w-5 text-${room.color}-500`} />
+            <BedDouble className={cn("h-5 w-5", `text-${room.color}-500`)} />
             <h3 className="font-medium">{room.name}</h3>
           </div>
         </div>
@@ -58,7 +50,7 @@ const RoomTypeCard = ({ room, onEdit, index }: RoomTypeCardProps) => {
         {/* Colored badge with room count moved under the room type */}
         <div className="mb-3">
           <Badge className={cn(colorMap[room.color] || "bg-blue-500")}>
-            {room.totalRooms || room.roomNumbers?.length || 0} rooms
+            {room.roomNumbers.length} rooms
           </Badge>
         </div>
         
@@ -68,7 +60,7 @@ const RoomTypeCard = ({ room, onEdit, index }: RoomTypeCardProps) => {
           <div className="space-y-2">
             <div className="text-xs font-medium">Number of Rooms</div>
             <div className="text-xs text-muted-foreground">
-              {room.totalRooms || room.roomNumbers?.length || 0}
+              {room.roomNumbers.length}
             </div>
           </div>
           
@@ -79,7 +71,7 @@ const RoomTypeCard = ({ room, onEdit, index }: RoomTypeCardProps) => {
               <span>Guests</span>
             </div>
             <div className="text-xs text-muted-foreground">
-              Max {room.maxGuests || 2} per room
+              Max {room.maxGuests} per room
             </div>
           </div>
           
@@ -87,7 +79,7 @@ const RoomTypeCard = ({ room, onEdit, index }: RoomTypeCardProps) => {
           <div className="space-y-2">
             <div className="text-xs font-medium">Room Numbers</div>
             <div className="space-y-1">
-              {room.roomNumbers && room.roomNumbers.length > 0 ? (
+              {room.roomNumbers.length > 0 ? (
                 room.roomNumbers.map((roomNumber, i) => (
                   <div key={i} className="text-xs text-muted-foreground">
                     {roomNumber}
@@ -106,7 +98,7 @@ const RoomTypeCard = ({ room, onEdit, index }: RoomTypeCardProps) => {
               {sortedAmenities.length > 0 ? (
                 sortedAmenities.map((amenity, i) => (
                   <div key={i} className="text-xs text-muted-foreground">
-                    {amenity}
+                    {amenity.name}
                   </div>
                 ))
               ) : (
@@ -117,7 +109,7 @@ const RoomTypeCard = ({ room, onEdit, index }: RoomTypeCardProps) => {
         </div>
         
         <div className="mt-3 flex justify-end space-x-2">
-          <Button variant="outline" size="sm" onClick={() => onEdit(index)}>
+          <Button variant="outline" size="sm" onClick={onEdit}>
             <Edit className="h-4 w-4 mr-1" /> Edit
           </Button>
         </div>

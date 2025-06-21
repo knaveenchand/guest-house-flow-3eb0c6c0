@@ -2,211 +2,171 @@
 import { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import { toast } from "sonner";
+
+import { RoomType, getRoomTypes, updateRoomType } from "@/api/roomTypes";
+import { BookingChannel, getBookingChannels, addBookingChannel, updateBookingChannel, deleteBookingChannel } from "@/api/bookingChannels";
+
 import RoomTypesSection from "@/components/rooms/RoomTypesSection";
 import RatePlansSection from "@/components/rooms/RatePlansSection";
 import BookingChannelsSection from "@/components/rooms/BookingChannelsSection";
 import PoliciesSection from "@/components/rooms/PoliciesSection";
 
-// Booking channels
-const initialBookingChannels = [
-  "Walk-in",
-  "Booking.com",
-  "Expedia",
-  "WebsiteAquita",
-  "Mani Tours",
-  "Compass Diving",
-  "Aquatica"
-];
-
-// Room types with their base rates
-const roomTypes = [
-  { 
-    name: "Standard Room", 
-    totalRooms: 14, 
-    description: "Basic amenities, 2 guests max", 
-    color: "blue",
-    roomNumbers: ["101", "102", "103", "104", "105", "106", "107", "201", "202", "203", "204", "205", "206", "207"],
-    amenities: ["Wi-Fi", "TV", "Air conditioning", "Private bathroom"],
-    maxGuests: 2
-  },
-  { 
-    name: "Deluxe Room", 
-    totalRooms: 12, 
-    description: "Enhanced amenities, 3 guests max", 
-    color: "indigo",
-    roomNumbers: ["108", "109", "110", "111", "112", "208", "209", "210", "211", "212", "301", "302"],
-    amenities: ["Wi-Fi", "TV", "Air conditioning", "Private bathroom", "Mini fridge", "Safe", "Balcony"],
-    maxGuests: 3
-  },
-  { 
-    name: "Suite", 
-    totalRooms: 8, 
-    description: "Luxury amenities, 4 guests max", 
-    color: "purple",
-    roomNumbers: ["303", "304", "305", "306", "307", "308", "309", "310"],
-    amenities: ["Wi-Fi", "TV", "Air conditioning", "Private bathroom", "Mini fridge", "Safe", "Balcony", "Separate living area", "Jacuzzi", "King size bed"],
-    maxGuests: 4
-  }
-];
-
-// Initial rates data
-const initialRatesData = {
-  "Standard Room": {
-    "Walk-in": "99",
-    "Booking.com": "109",
-    "Expedia": "109",
-    "WebsiteAquita": "89",
-    "Mani Tours": "94",
-    "Compass Diving": "94",
-    "Aquatica": "89"
-  },
-  "Deluxe Room": {
-    "Walk-in": "149",
-    "Booking.com": "159",
-    "Expedia": "159",
-    "WebsiteAquita": "139",
-    "Mani Tours": "145",
-    "Compass Diving": "145",
-    "Aquatica": "139"
-  },
-  "Suite": {
-    "Walk-in": "249",
-    "Booking.com": "269",
-    "Expedia": "269",
-    "WebsiteAquita": "239",
-    "Mani Tours": "245",
-    "Compass Diving": "245", 
-    "Aquatica": "239"
-  }
-};
-
-// Storage keys for persisting data
-const STORAGE_KEYS = {
-  ROOM_TYPES: "hotel_room_types",
-  RATES_DATA: "hotel_rates_data",
-  BOOKING_CHANNELS: "hotel_booking_channels"
-};
-
 const RoomsSetupPage = () => {
-  const [ratesData, setRatesData] = useState(initialRatesData);
-  const [bookingChannels, setBookingChannels] = useState(initialBookingChannels);
-  const [roomTypeList, setRoomTypeList] = useState(roomTypes);
-  
-  // Load data from localStorage on component mount
+  const [roomTypeList, setRoomTypeList] = useState<RoomType[]>([]);
+  const [bookingChannels, setBookingChannels] = useState<BookingChannel[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch initial data from Firestore
   useEffect(() => {
-    const savedRoomTypes = localStorage.getItem(STORAGE_KEYS.ROOM_TYPES);
-    const savedRatesData = localStorage.getItem(STORAGE_KEYS.RATES_DATA);
-    const savedBookingChannels = localStorage.getItem(STORAGE_KEYS.BOOKING_CHANNELS);
-    
-    if (savedRoomTypes) {
-      setRoomTypeList(JSON.parse(savedRoomTypes));
-    }
-    
-    if (savedRatesData) {
-      setRatesData(JSON.parse(savedRatesData));
-    }
-    
-    if (savedBookingChannels) {
-      setBookingChannels(JSON.parse(savedBookingChannels));
-    }
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [rooms, channels] = await Promise.all([
+          getRoomTypes(),
+          getBookingChannels(),
+        ]);
+        setRoomTypeList(rooms);
+        setBookingChannels(channels);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        toast.error("Failed to load room and channel data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
+
+  // This function transforms the roomTypeList into the ratesData structure expected by child components
+  const getRatesData = () => {
+    const rates: { [roomTypeName: string]: { [channelName: string]: string } } = {};
+    for (const roomType of roomTypeList) {
+      rates[roomType.name] = {};
+      for (const channel of bookingChannels) {
+        // Find the rate for the current channel in the roomType's rates map
+        const rateValue = roomType.rates[channel.id!]?.toString() || "0";
+        rates[roomType.name][channel.name] = rateValue;
+      }
+    }
+    return rates;
+  };
   
-  // Save room types to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.ROOM_TYPES, JSON.stringify(roomTypeList));
-  }, [roomTypeList]);
-  
-  // Save rates data to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.RATES_DATA, JSON.stringify(ratesData));
-  }, [ratesData]);
-  
-  // Save booking channels to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.BOOKING_CHANNELS, JSON.stringify(bookingChannels));
-  }, [bookingChannels]);
-  
-  const handleRateChange = (roomType: string, channel: string, value: string) => {
-    // Only allow numeric input with optional decimal point
-    if (!/^\d*\.?\d*$/.test(value) && value !== '') {
+  const handleRateChange = async (roomTypeName: string, channelName: string, value: string) => {
+    const newRate = parseFloat(value);
+    if (isNaN(newRate)) {
+      toast.error("Invalid rate value.");
+      return;
+    }
+
+    const roomTypeToUpdate = roomTypeList.find(rt => rt.name === roomTypeName);
+    const channelToUpdate = bookingChannels.find(bc => bc.name === channelName);
+
+    if (!roomTypeToUpdate || !channelToUpdate) {
+      toast.error("Could not find the room type or channel to update.");
+      return;
+    }
+
+    const updatedRates = {
+      ...roomTypeToUpdate.rates,
+      [channelToUpdate.id!]: newRate,
+    };
+
+    try {
+      await updateRoomType(roomTypeToUpdate.id!, { rates: updatedRates });
+      
+      // Optimistically update local state for immediate UI feedback
+      setRoomTypeList(prevList => 
+        prevList.map(rt => 
+          rt.id === roomTypeToUpdate.id ? { ...rt, rates: updatedRates } : rt
+        )
+      );
+      toast.success(`Rate for ${roomTypeName} on ${channelName} updated.`);
+    } catch (error) {
+      console.error("Error updating rate:", error);
+      toast.error("Failed to update rate.");
+    }
+  };
+
+  const handleAddChannel = async (channelName: string, commission: string, paymentType: string) => {
+    try {
+      const newChannel: Omit<BookingChannel, 'id'> = { 
+        name: channelName,
+        commission: parseFloat(commission) || 0,
+        paymentType: paymentType
+      };
+      
+      const docRef = await addBookingChannel(newChannel);
+      const addedChannel = { ...newChannel, id: docRef.id };
+      
+      setBookingChannels(prev => [...prev, addedChannel]);
+      toast.success(`Added ${channelName} to booking channels.`);
+    } catch (error) {
+      console.error("Error adding channel:", error);
+      toast.error("Failed to add booking channel.");
+    }
+  };
+
+  const handleEditChannel = async (oldName: string, newName: string) => {
+    const channelToUpdate = bookingChannels.find(bc => bc.name === oldName);
+    if (!channelToUpdate) {
+      toast.error("Could not find the channel to edit.");
+      return;
+    }
+
+    try {
+      await updateBookingChannel(channelToUpdate.id!, { name: newName });
+      setBookingChannels(prev => 
+        prev.map(c => c.id === channelToUpdate.id ? { ...c, name: newName } : c)
+      );
+      toast.success(`Updated channel from ${oldName} to ${newName}.`);
+    } catch (error) {
+      console.error("Error editing channel:", error);
+      toast.error("Failed to edit booking channel.");
+    }
+  };
+
+  const handleDeleteChannel = async (channelName: string) => {
+    const channelToDelete = bookingChannels.find(bc => bc.name === channelName);
+    if (!channelToDelete) {
+      toast.error("Could not find the channel to delete.");
       return;
     }
     
-    setRatesData(prev => ({
-      ...prev,
-      [roomType]: {
-        ...prev[roomType],
-        [channel]: value
-      }
-    }));
-  };
-
-  const handleAddRatePlan = () => {
-    // This would open a modal to add a new rate plan
-    toast.success("Add Rate Plan functionality will be implemented here");
-  };
-
-  const handleAddChannel = (channelName: string, commission: string, paymentType: string) => {
-    // Add new channel to the list
-    setBookingChannels(prev => [...prev, channelName]);
-    
-    // Update rates data to include the new channel for all room types
-    setRatesData(prev => {
-      const updated = { ...prev };
-      Object.keys(updated).forEach(roomType => {
-        updated[roomType][channelName] = updated[roomType]["Walk-in"]; // Use Walk-in rate as default
-      });
-      return updated;
-    });
-    
-    toast.success(`Added ${channelName} to booking channels`);
-  };
-
-  const handleEditChannel = (oldChannel: string, newChannel: string) => {
-    if (oldChannel === newChannel) return; // No change
-    
-    // Update the channel name in the list
-    setBookingChannels(prev => 
-      prev.map(channel => channel === oldChannel ? newChannel : channel)
-    );
-    
-    // Update the rates data with the new channel name
-    setRatesData(prev => {
-      const updated = { ...prev };
-      Object.keys(updated).forEach(roomType => {
-        const rate = updated[roomType][oldChannel];
-        delete updated[roomType][oldChannel];
-        updated[roomType][newChannel] = rate;
-      });
-      return updated;
-    });
-    
-    toast.success(`Updated channel from ${oldChannel} to ${newChannel}`);
-  };
-
-  const handleDeleteChannel = (channel: string) => {
-    if (channel === "Walk-in") {
-      toast.error("Cannot delete the default Walk-in channel");
-      return; // Protect default channel
+    // As a safeguard, you might want to prevent deleting critical channels
+    if (channelToDelete.name === "Walk-in") {
+        toast.error("The 'Walk-in' channel cannot be deleted.");
+        return;
     }
-    
-    // Remove the channel from the list
-    setBookingChannels(prev => 
-      prev.filter(c => c !== channel)
-    );
-    
-    // Remove the channel from rates data
-    setRatesData(prev => {
-      const updated = { ...prev };
-      Object.keys(updated).forEach(roomType => {
-        const { [channel]: removed, ...rest } = updated[roomType];
-        updated[roomType] = rest;
+
+    try {
+      await deleteBookingChannel(channelToDelete.id!);
+      
+      // Also remove the rate from all room types that use this channel
+      const updatePromises = roomTypeList.map(rt => {
+        const { [channelToDelete.id!]: _, ...remainingRates } = rt.rates;
+        return updateRoomType(rt.id!, { rates: remainingRates });
       });
-      return updated;
-    });
-    
-    toast.success(`Deleted ${channel} from booking channels`);
+
+      await Promise.all(updatePromises);
+
+      // Update state locally
+      setBookingChannels(prev => prev.filter(c => c.id !== channelToDelete.id));
+      setRoomTypeList(prev => prev.map(rt => {
+          const { [channelToDelete.id!]: _, ...remainingRates } = rt.rates;
+          return { ...rt, rates: remainingRates };
+      }));
+
+      toast.success(`Deleted ${channelName} from booking channels.`);
+    } catch (error) {
+      console.error("Error deleting channel:", error);
+      toast.error("Failed to delete booking channel.");
+    }
   };
+
+  if (loading) {
+    return <Layout><div>Loading...</div></Layout>;
+  }
 
   return (
     <Layout>
@@ -216,33 +176,35 @@ const RoomsSetupPage = () => {
           <p className="text-muted-foreground">Configure room types, rates, and property settings.</p>
         </div>
         
-        {/* Room Types Section */}
         <RoomTypesSection 
           roomTypeList={roomTypeList}
           setRoomTypeList={setRoomTypeList}
-          ratesData={ratesData}
-          setRatesData={setRatesData}
           bookingChannels={bookingChannels}
         />
         
-        {/* Rate Plans Section */}
         <RatePlansSection 
-          roomTypeList={roomTypeList}
-          bookingChannels={bookingChannels}
-          ratesData={ratesData}
+          roomTypeList={roomTypeList.map(rt => ({
+            name: rt.name,
+            description: rt.description,
+            color: rt.color,
+            roomNumbers: rt.roomNumbers,
+            maxGuests: rt.maxGuests,
+            totalRooms: rt.roomNumbers.length,
+            amenities: rt.amenities.map(a => a.name)
+          }))}
+          bookingChannels={bookingChannels.map(c => c.name)}
+          ratesData={getRatesData()}
           handleRateChange={handleRateChange}
-          handleAddRatePlan={handleAddRatePlan}
+          handleAddRatePlan={() => toast.info("This will be implemented later.")}
         />
         
-        {/* Booking Channels Section */}
         <BookingChannelsSection 
-          bookingChannels={bookingChannels}
+          bookingChannels={bookingChannels.map(c => c.name)}
           handleEditChannel={handleEditChannel}
           handleAddChannel={handleAddChannel}
           handleDeleteChannel={handleDeleteChannel}
         />
         
-        {/* Policies Section */}
         <PoliciesSection />
       </div>
     </Layout>
