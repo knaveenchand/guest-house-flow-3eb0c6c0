@@ -4,7 +4,7 @@ import { getAuth, connectAuthEmulator } from "firebase/auth";
 
 // Your new web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAyIbO_lvDzOg4VstrfO2qdMNKYdZ1fiPM",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "onit-b6e3a.firebaseapp.com",
   projectId: "onit-b6e3a",
   storageBucket: "onit-b6e3a.firebasestorage.app",
