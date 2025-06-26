@@ -10,6 +10,9 @@ import RoomTypesSection from "@/components/rooms/RoomTypesSection";
 import RatePlansSection from "@/components/rooms/RatePlansSection";
 import BookingChannelsSection from "@/components/rooms/BookingChannelsSection";
 import PoliciesSection from "@/components/rooms/PoliciesSection";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const RoomsSetupPage = () => {
   const [roomTypeList, setRoomTypeList] = useState<RoomType[]>([]);
@@ -106,23 +109,18 @@ const RoomsSetupPage = () => {
           bookingChannels={bookingChannels}
         />
         
-        <RatePlansSection 
-          roomTypeList={roomTypeList.map(rt => ({
-            name: rt.name,
-            description: rt.description,
-            color: rt.color,
-            roomNumbers: rt.roomNumbers,
-            maxGuests: rt.maxGuests,
-            totalRooms: rt.roomNumbers.length,
-            amenities: rt.amenities.map(a => a.name)
-          }))}
-          bookingChannels={bookingChannels.map(c => c.name)}
-          ratesData={getRatesData()}
-          handleRateChange={handleRateChange}
-          handleAddRatePlan={() => toast.info("This will be implemented later.")}
-        />
-        
         <BookingChannelsSection />
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Rate Plans</CardTitle>
+          </CardHeader>
+          <CardContent className="flex justify-center items-center">
+            <Button asChild>
+              <Link to="/rooms/setup/rates">Setup Rates</Link>
+            </Button>
+          </CardContent>
+        </Card>
         
         <PoliciesSection />
       </div>

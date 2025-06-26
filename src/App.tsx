@@ -14,6 +14,7 @@ import NotFound from "./pages/NotFound";
 
 // Add module subpages
 import RoomsCalendarPage from "./pages/rooms/RoomsCalendarPage";
+import RoomsRatesPage from "./pages/rooms/RoomsRatesPage";
 import RoomsListPage from "./pages/rooms/RoomsListPage";
 import RoomsInvoicingPage from "./pages/rooms/RoomsInvoicingPage";
 import RoomsSetupPage from "./pages/rooms/RoomsSetupPage";
@@ -77,6 +78,7 @@ const App = () => (
           <Route path="/rooms/list" element={<RoomsListPage />} />
           <Route path="/rooms/invoicing" element={<RoomsInvoicingPage />} />
           <Route path="/rooms/setup" element={<RoomsSetupPage />} />
+          <Route path="/rooms/setup/rates" element={<RoomsRatesPage />} />
           <Route path="/rooms/add" element={<AddBookingPage />} />
           
           {/* POS module */}

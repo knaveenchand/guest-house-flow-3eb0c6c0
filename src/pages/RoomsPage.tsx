@@ -204,9 +204,11 @@ const RoomsPage = () => {
               Overview of room occupancy, arrivals, and housekeeping
             </p>
           </div>
-          <Button asChild>
-            <Link to="/rooms/calendar">View Calendar</Link>
-          </Button>
+          <div className="flex gap-2">
+            <Button asChild>
+                <Link to="/rooms/calendar">View Calendar</Link>
+            </Button>
+          </div>
         </div>
 
         {/* Today's Quick Stats */}
